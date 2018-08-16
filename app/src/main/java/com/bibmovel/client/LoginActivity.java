@@ -1,15 +1,11 @@
 package com.bibmovel.client;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -45,17 +41,14 @@ public class LoginActivity extends AppCompatActivity {
         edt_user = findViewById(R.id.edt_user);
         edt_pass = findViewById(R.id.edt_pass);
 
-        findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.btn_login).setOnClickListener(v -> {
 
-                String user = edt_user.getText().toString();
-                String pass = edt_pass.getText().toString();
+            String user = edt_user.getText().toString();
+            String pass = edt_pass.getText().toString();
 
-                // TODO: 11/08/18 Verificação dos dados
+            // TODO: 11/08/18 Verificação dos dados
 
-                logOn(user, pass);
-            }
+            logOn(user, pass);
         });
     }
 
@@ -87,10 +80,8 @@ public class LoginActivity extends AppCompatActivity {
 
             startActivity(it);
 
-        } else {
-            Snackbar.make(edt_user, "Credenciais incorretas"
-                    , Snackbar.LENGTH_LONG).show();
-        }
+        } else
+            edt_user.setError("Credenciais incorretas");
     }
 
     private void logOn(GoogleSignInAccount account) {
