@@ -4,71 +4,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/BackgroundLogin"
+    android:background="@drawable/background_login"
     tools:context=".LoginActivity"
     android:gravity="center">
 
     <RelativeLayout
-        android:layout_width="342dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_width="match_parent"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:contentDescription="logo"
+            android:src="@drawable/logo" />
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="217dp">
+            android:layout_below="@id/image"
+            android:gravity="center_vertical"
+            android:layout_above="@id/btn_login">
 
             <EditText
                 android:id="@+id/edt_user"
                 android:layout_width="match_parent"
-                android:layout_height="26dp"
-                android:background=""
+                android:layout_height="wrap_content"
+                android:background="@color/almost_transparent"
+                android:layout_gravity="center"
                 android:hint="Usuário"
-                android:inputType="text" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="214dp">
+                android:textSize="22sp"
+                android:inputType="text"
+                android:layout_marginBottom="@dimen/fab_margin"/>
 
             <EditText
                 android:id="@+id/edt_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background=""
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_gravity="center"
+                android:background="@color/almost_transparent"
                 android:hint="Senha"
+                android:textSize="22sp"
                 android:inputType="textPassword"
-                android:selectAllOnFocus="true"
                 android:singleLine="true" />
 
-        </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_login"
             android:layout_width="203dp"
             android:layout_height="wrap_content"
-            android:background=" "
-            android:layout_alignParentBottom="true"
+            android:background="@color/almost_transparent"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="156dp"
-            android:layout_weight="1"
+            android:layout_above="@id/text_google"
+            android:layout_marginBottom="@dimen/fab_margin"
             android:text="Entrar" />
 
         <TextView
+            android:id="@+id/text_google"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/g_sign_in"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:text="Ou entre com sua conta Google"
-            android:textColor="#000000"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:textColor="@color/black"
             android:textSize="17sp" />
 
         <com.google.android.gms.common.SignInButton
@@ -79,15 +84,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp" />
 
-        <ImageView
-            android:layout_width="347dp"
-            android:layout_height="212dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:contentDescription="TODO"
-            android:src="@drawable/logo" />
     </RelativeLayout>
-
 
 </RelativeLayout>

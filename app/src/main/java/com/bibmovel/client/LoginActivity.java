@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.bibmovel.client.settings.SettingsActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -125,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                 }).create().show();
                 break;
             case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
 
