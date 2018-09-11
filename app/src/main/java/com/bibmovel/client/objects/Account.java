@@ -1,4 +1,4 @@
-package com.bibmovel.client.object;
+package com.bibmovel.client.objects;
 
 /**
  * Created by vinibrenobr11 on 11/08/18 at 10:38

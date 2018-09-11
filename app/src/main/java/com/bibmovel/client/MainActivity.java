@@ -10,15 +10,23 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.bibmovel.client.object.Account;
+import com.bibmovel.client.adapters.BookAdapter;
+import com.bibmovel.client.objects.Account;
+import com.bibmovel.client.objects.Book;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,6 +63,31 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //todo: Obter livros do servidor
+        List<Book> books = obtemLivros();
+
+        RecyclerView recyclerView = findViewById(R.id.rv_books);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(new BookAdapter(books));
+
+        new LinearSnapHelper().attachToRecyclerView(recyclerView);
+    }
+
+    private List<Book> obtemLivros() {
+
+        List<Book> books = new ArrayList<>();
+
+        books.add(new Book("9788520911501","Sagarana", "Guimarães Rosa"
+                , null, null, 3.2f, "yellow"));
+
+        books.add(new Book("9781101569177","A Culpa é das Estrelas", "John Green"
+                , null, null, 4.5f, "blue"));
+
+        books.add(new Book("9788575224687", "Google Android", "Ricardo R. Lecheta"
+            , null, null, 5.0f, "white"));
+
+        return books;
     }
 
     @Override

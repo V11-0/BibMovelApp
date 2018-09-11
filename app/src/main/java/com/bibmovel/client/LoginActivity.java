@@ -19,8 +19,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
 
-    private EditText edt_user;
-    private EditText edt_pass;
+    private EditText edtUser;
+    private EditText edtPass;
 
     private static final int RC_SIGN_IN = 10;
 
@@ -39,13 +39,13 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.g_sign_in).setOnClickListener(v -> signIn());
 
-        edt_user = findViewById(R.id.edt_user);
-        edt_pass = findViewById(R.id.edt_pass);
+        edtUser = findViewById(R.id.edt_user);
+        edtPass = findViewById(R.id.edt_pass);
 
         findViewById(R.id.btn_login).setOnClickListener(v -> {
 
-            String user = edt_user.getText().toString();
-            String pass = edt_pass.getText().toString();
+            String user = edtUser.getText().toString();
+            String pass = edtPass.getText().toString();
 
             // TODO: 11/08/18 Verificação dos dados
 
@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(it);
 
         } else
-            edt_user.setError("Credenciais incorretas");
+            edtUser.setError("Credenciais incorretas");
     }
 
     private void logOn(GoogleSignInAccount account) {
