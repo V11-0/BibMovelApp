@@ -1,8 +1,8 @@
 package com.bibmovel.client;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -65,20 +65,8 @@ public class LoginActivity extends Activity {
         if (requestCode == RC_SIGN_IN) {
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            GoogleSignInAccount account;
-
-            try {
-                account = task.getResult();
-                logOn(account);
-            } catch (Exception e) {
-                e.printStackTrace();
-                new AlertDialog.Builder(this)
-                        .setMessage("Não foi possível logar com a conta Google")
-                        .setNeutralButton("OK", null)
-                        .create()
-                        .show();
-            }
+            GoogleSignInAccount account = task.getResult();
+            logOn(account);
         }
 
     }
