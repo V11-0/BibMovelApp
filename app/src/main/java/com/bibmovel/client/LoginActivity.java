@@ -65,8 +65,13 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            GoogleSignInAccount account = task.getResult();
-            logOn(account);
+
+            try {
+                GoogleSignInAccount account = task.getResult();
+                logOn(account);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
