@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,7 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -52,8 +50,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(v -> {
+
+        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,29 +64,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //todo: Obter livros do servidor
-        List<Book> books = obtemLivros();
 
         RecyclerView recyclerView = findViewById(R.id.rv_books);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(new BookAdapter(books));
+        //recyclerView.setAdapter(new BookAdapter(books));
 
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
-    }
-
-    private List<Book> obtemLivros() {
-
-        List<Book> books = new ArrayList<>();
-
-        books.add(new Book("9788520911501","Sagarana", "Guimarães Rosa"
-                , null, null, 3.2f, "yellow"));
-
-        books.add(new Book("9781101569177","A Culpa é das Estrelas", "John Green"
-                , null, null, 4.5f, "blue"));
-
-        books.add(new Book("9788575224687", "Google Android", "Ricardo R. Lecheta"
-            , null, null, 5.0f, "white"));
-
-        return books;
     }
 
     @Override

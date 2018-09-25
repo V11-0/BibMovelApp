@@ -11,7 +11,7 @@ public abstract class ConnectionFactory {
 
     private static Connection connection;
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection getSQLConnection() throws SQLException {
 
         if (connection.isValid(10))
             return connection;
@@ -22,7 +22,7 @@ public abstract class ConnectionFactory {
             e.printStackTrace();
         }
 
-        connection = DriverManager.getConnection("jdbc:mysql://192.168.0.100:3306/Bib"
+        connection = DriverManager.getConnection("jdbc:mysql://192.168.0.100:3306/BibMovel"
                 , "root", "1234");
 
         return connection;
