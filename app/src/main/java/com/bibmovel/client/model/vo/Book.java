@@ -1,6 +1,4 @@
-package com.bibmovel.client.objects;
-
-import android.graphics.Color;
+package com.bibmovel.client.model.vo;
 
 import java.util.Date;
 

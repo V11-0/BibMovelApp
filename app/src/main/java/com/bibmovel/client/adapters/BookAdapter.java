@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bibmovel.client.R;
-import com.bibmovel.client.objects.Book;
+import com.bibmovel.client.model.vo.Book;
 import com.bibmovel.client.utils.BookColorHelper;
 
 import java.util.List;
