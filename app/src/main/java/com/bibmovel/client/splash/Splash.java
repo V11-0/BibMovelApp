@@ -12,6 +12,10 @@ import com.bibmovel.client.LoginActivity;
 import com.bibmovel.client.MainActivity;
 import com.bibmovel.client.R;
 import com.bibmovel.client.utils.Values;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 
 /**
@@ -31,7 +35,7 @@ public class Splash extends Activity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        // Deixa os ícones da barra de navegação pretos para Android Oreo ou superior
+        // Deixa os ícones da barra de navegação escuros para Android Oreo ou superior
         if (Build.VERSION.SDK_INT >= 26) {
             int flags = getWindow().getDecorView().getSystemUiVisibility();
             flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
@@ -45,12 +49,23 @@ public class Splash extends Activity implements Runnable {
         SharedPreferences prefs = getSharedPreferences(Values.getPrefsLogin(), MODE_PRIVATE);
         boolean isLogged = prefs.getBoolean(Values.getPrefsLogin(), false);
 
+        if (isLogged)
+            it = new Intent(this, MainActivity.class);
+        else {
+
+            GoogleSignInAccount signedInAccount = GoogleSignIn.getLastSignedInAccount(this);
+
+            if (signedInAccount != null)
+                it = new Intent(this, MainActivity.class).putExtra("google_account", signedInAccount);
+            else
+                it = new Intent(this, LoginActivity.class);
+        }
+
         /*
          * Se o usuário já estiver logado, o app se inicia na "Tela inicial"
          * Onde ele verá os posts de outros usuários
          * Se não, o app iniciará na tela para ele fazer o login
          */
-        it = isLogged? new Intent(this, MainActivity.class) : new Intent(this, LoginActivity.class);
 
         // Espera 3 sec para executar o método run()
         // e ir para a próxima tela

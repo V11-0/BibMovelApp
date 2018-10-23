@@ -14,11 +14,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.bibmovel.client.model.vo.Account;
+import com.bibmovel.client.adapters.BookAdapter;
+import com.bibmovel.client.model.vo.Livro;
+import com.bibmovel.client.retrofit.LivrosService;
+import com.bibmovel.client.retrofit.RetroFitInstance;
 import com.bibmovel.client.utils.Values;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,26 +32,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleSignInAccount googleSignInAccount = null;
-    private Account server_account = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        googleSignInAccount = getIntent().getParcelableExtra("google_account");
-
-        if (googleSignInAccount == null) {
-
-            Intent data = getIntent();
-
-            server_account = new Account(data.getStringExtra("user"), data.getStringExtra("email"));
-        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,6 +73,34 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         new LinearSnapHelper().attachToRecyclerView(recyclerView);
+
+        googleSignInAccount = getIntent().getParcelableExtra("google_account");
+
+        LivrosService service = RetroFitInstance.getRetrofitInstance().create(LivrosService.class);
+
+        Call<List<Livro>> listCall = service.getLivros();
+        Log.d("URL", listCall.request().url().toString());
+
+        listCall.enqueue(new Callback<List<Livro>>() {
+            @Override
+            public void onResponse(Call<List<Livro>> call, Response<List<Livro>> response) {
+
+                Log.d("Entrou", "Entrou no onResponse");
+
+                if (response.body() != null) {
+                    Log.d("null", "body não é nulo");
+                    List<Livro> livros = new ArrayList<>(response.body());
+                    BookAdapter adapter = new BookAdapter(livros);
+                    recyclerView.setAdapter(adapter);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Livro>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -126,6 +155,7 @@ public class MainActivity extends AppCompatActivity
             finish();
         } else {
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
     }
 

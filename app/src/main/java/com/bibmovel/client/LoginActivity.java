@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             it.putExtra("email", "email");
 
             startActivity(it);
+            finish();
 
         } else
             edtUser.setError("Credenciais incorretas");
@@ -96,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
         it.putExtra("google_account", account);
 
         startActivity(it);
+        finish();
     }
 
     @Override

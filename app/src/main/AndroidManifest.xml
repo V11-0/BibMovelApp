@@ -24,7 +24,8 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".splash.Splash"
+        <activity
+            android:name=".splash.Splash"
             android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".BookDetailsActivity"></activity>
     </application>
 
 </manifest>

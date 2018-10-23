@@ -1,16 +1,18 @@
 package com.bibmovel.client.adapters;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.bibmovel.client.BookDetailsActivity;
 import com.bibmovel.client.R;
-import com.bibmovel.client.model.vo.Book;
-import com.bibmovel.client.utils.BookColorHelper;
+import com.bibmovel.client.model.vo.Livro;
 
 import java.util.List;
 
@@ -19,9 +21,9 @@ import java.util.List;
  */
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
-    private List<Book> books;
+    private List<Livro> books;
 
-    public BookAdapter(List<Book> books) {
+    public BookAdapter(List<Livro> books) {
         this.books = books;
     }
 
@@ -35,9 +37,38 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
 
-        holder.book_logo.setBackgroundColor(BookColorHelper.getColorByString(books.get(position).getCoverColor()));
-        holder.book_name.setText(books.get(position).getName());
-        holder.book_rating.setText(String.valueOf(books.get(position).getRating()));
+        //// TODO: 22/10/18 Pegar thumb do arquivo
+        holder.bookName.setText(books.get(position).getTitulo());
+        holder.bookRating.setText(String.valueOf(books.get(position).getClassificacaoMedia()));
+
+        holder.menuOptions.setOnClickListener(v -> {
+
+            PopupMenu popup = new PopupMenu(v.getContext(), holder.menuOptions);
+            popup.inflate(R.menu.book_menu);
+
+            popup.setOnMenuItemClickListener(item -> {
+
+                int id = item.getItemId();
+
+                switch (id) {
+
+                    case R.id.menu_baixar:
+                        //// TODO: 21/10/18 Néh
+                }
+
+                return true;
+            });
+
+            popup.show();
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+
+            Intent intent = new Intent(v.getContext(), BookDetailsActivity.class);
+            intent.putExtra("bookIsbn", books.get(holder.getAdapterPosition()).getIsbn());
+
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -47,16 +78,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     class BookViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView book_logo;
-        private TextView book_name;
-        private TextView book_rating;
+        private ImageView bookLogo;
+        private TextView bookName;
+        private TextView bookRating;
+        private TextView menuOptions;
 
         BookViewHolder(View itemView) {
             super(itemView);
 
-            book_logo = itemView.findViewById(R.id.book_logo);
-            book_name = itemView.findViewById(R.id.book_name);
-            book_rating = itemView.findViewById(R.id.book_rating);
+            bookLogo = itemView.findViewById(R.id.book_logo);
+            bookName = itemView.findViewById(R.id.book_name);
+            bookRating = itemView.findViewById(R.id.book_rating);
+            menuOptions = itemView.findViewById(R.id.menuOptions);
         }
     }
 }

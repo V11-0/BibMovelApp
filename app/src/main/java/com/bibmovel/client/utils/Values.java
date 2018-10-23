@@ -5,8 +5,8 @@ package com.bibmovel.client.utils;
  */
 public class Values {
 
-    private static final String PREFS_LOGIN = "";
-    private static final int PICKFILE_REQUEST_CODE = 4;
+    private static final String PREFS_LOGIN = "LoginData";
+    private static final int PICKFILE_REQUEST_CODE = 5;
 
     public static String getPrefsLogin() {
         return PREFS_LOGIN;
