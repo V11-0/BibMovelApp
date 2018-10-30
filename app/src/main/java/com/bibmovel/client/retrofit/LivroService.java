@@ -13,14 +13,14 @@ import retrofit2.http.Path;
 /**
  * Created by vinibrenobr11 on 17/10/18 at 17:57
  */
-public interface LivrosService {
+public interface LivroService {
 
-    @GET("livros")
+    @GET("livro")
     Call<List<Livro>> getLivros();
 
-    @GET("livros/{isbn}")
+    @GET("livro/{isbn}")
     Call<Livro> getLivro(@Path("isbn") String isbn);
 
-    @POST("livros")
+    @POST("livro")
     Call<Livro> criarLivro(@Body Livro livro);
 }

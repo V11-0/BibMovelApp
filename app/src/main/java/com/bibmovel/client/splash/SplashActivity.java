@@ -7,15 +7,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bibmovel.client.LoginActivity;
 import com.bibmovel.client.MainActivity;
 import com.bibmovel.client.R;
 import com.bibmovel.client.utils.Values;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 
 /**
@@ -25,15 +28,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
  * de "Splash", ou de apresentação no início da execução
  * do app, ultilizando uma interface @{@link Runnable}
  */
-public class Splash extends Activity implements Runnable {
-
-    // Intent usado para iniciar a primeira tela
-    private Intent it;
+public class SplashActivity extends Activity implements Runnable {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash);
+        setContentView(R.layout.activity_splash);
 
         // Deixa os ícones da barra de navegação escuros para Android Oreo ou superior
         if (Build.VERSION.SDK_INT >= 26) {
@@ -42,35 +42,14 @@ public class Splash extends Activity implements Runnable {
             getWindow().getDecorView().setSystemUiVisibility(flags);
         }
 
-        /*
-         * Cria um SharedPreferences, e verifica se o usuário está
-         * com login ativo ou não, e este valor é repassado a um boolean
-         */
-        SharedPreferences prefs = getSharedPreferences(Values.getPrefsLogin(), MODE_PRIVATE);
-        boolean isLogged = prefs.getBoolean(Values.getPrefsLogin(), false);
+        ImageView logo = findViewById(R.id.splash_logo);
+        Animation logoAnimation = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
+        logoAnimation.setDuration(1800);
+        logo.startAnimation(logoAnimation);
 
-        if (isLogged)
-            it = new Intent(this, MainActivity.class);
-        else {
-
-            GoogleSignInAccount signedInAccount = GoogleSignIn.getLastSignedInAccount(this);
-
-            if (signedInAccount != null)
-                it = new Intent(this, MainActivity.class).putExtra("google_account", signedInAccount);
-            else
-                it = new Intent(this, LoginActivity.class);
-        }
-
-        /*
-         * Se o usuário já estiver logado, o app se inicia na "Tela inicial"
-         * Onde ele verá os posts de outros usuários
-         * Se não, o app iniciará na tela para ele fazer o login
-         */
-
-        // Espera 3 sec para executar o método run()
-        // e ir para a próxima tela
+        // Espera 2,5 sec para executar o método run()
         Handler handler = new Handler();
-        handler.postDelayed(this, 3000);
+        handler.postDelayed(this, 2500);
     }
 
     /**
@@ -78,6 +57,27 @@ public class Splash extends Activity implements Runnable {
      */
     @Override
     public void run() {
+
+        ProgressBar progressBar = findViewById(R.id.splash_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        Intent it;
+
+        GoogleSignInAccount signedInAccount = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (signedInAccount != null)
+            it = new Intent(this, MainActivity.class).putExtra("google_account", signedInAccount);
+        else {
+
+            SharedPreferences prefs = getSharedPreferences(Values.getPrefsLogin(), MODE_PRIVATE);
+
+            if (prefs.getBoolean(Values.getIsLogeedValueName(), false)) {
+                String login = prefs.getString(Values.getUserLoginValueName(), null);
+                it = new Intent(this, MainActivity.class).putExtra("user_login", login);
+            }
+            else it = new Intent(this, LoginActivity.class);
+        }
+
         startActivity(it);
         finish();
     }

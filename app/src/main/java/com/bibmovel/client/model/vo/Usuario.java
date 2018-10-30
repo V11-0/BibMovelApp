@@ -1,8 +1,11 @@
 package com.bibmovel.client.model.vo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Usuario implements java.io.Serializable {
+public class Usuario implements Parcelable {
 
 	@SerializedName("nome") private String nome;
 	@SerializedName("email") private String email;
@@ -60,4 +63,27 @@ public class Usuario implements java.io.Serializable {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		String[] data = {nome, email, senha, login};
+		dest.writeStringArray(data);
+	}
+
+	public static final Parcelable.Creator<Usuario> CREATOR = new Creator<Usuario>() {
+		@Override
+		public Usuario createFromParcel(Parcel source) {
+			return new Usuario(source.readString(), source.readString(), source.readString(), source.readString());
+		}
+
+		@Override
+		public Usuario[] newArray(int size) {
+			return new Usuario[0];
+		}
+	};
 }

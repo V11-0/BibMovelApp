@@ -7,4 +7,8 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="almost_transparent">#38ffffff</color>
+
+    <color name="welcome_background1">#f52bf8</color>
+    <color name="welcome_background2">#2a8fdd</color>
+    <color name="welcome_background3">#24d247</color>
 </resources>

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -18,10 +18,15 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Splash" parent="Theme.AppCompat.Light">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:statusBarColor">#ffffff</item>
         <item name="android:navigationBarColor">#ffffff</item>
         <item name="android:background">#ffffff</item>
+    </style>
+
+    <style name="Welcome" parent="WelcomeScreenTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
 </resources>

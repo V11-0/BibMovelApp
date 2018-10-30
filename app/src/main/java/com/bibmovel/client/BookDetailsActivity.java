@@ -1,12 +1,12 @@
 package com.bibmovel.client;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
 
 import com.bibmovel.client.model.vo.Autor;
 import com.bibmovel.client.model.vo.Livro;
-import com.bibmovel.client.retrofit.LivrosService;
+import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
 
 import retrofit2.Call;
@@ -24,7 +24,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
         String bookIsbn = getIntent().getStringExtra("bookIsbn");
 
-        LivrosService service = RetroFitInstance.getRetrofitInstance().create(LivrosService.class);
+        LivroService service = RetroFitInstance.getRetrofitInstance().create(LivroService.class);
 
         service.getLivro(bookIsbn).enqueue(new Callback<Livro>() {
 
