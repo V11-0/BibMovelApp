@@ -36,10 +36,6 @@ public class Usuario implements Parcelable {
 		return login;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
 	public String getNome() {
 		return nome;
 	}
@@ -60,10 +56,6 @@ public class Usuario implements Parcelable {
 		return senha;
 	}
 
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
 	@Override
 	public int describeContents() {
 		return 0;
@@ -71,14 +63,15 @@ public class Usuario implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		String[] data = {nome, email, senha, login};
+		String[] data = {login, nome, email};
 		dest.writeStringArray(data);
 	}
 
 	public static final Parcelable.Creator<Usuario> CREATOR = new Creator<Usuario>() {
 		@Override
 		public Usuario createFromParcel(Parcel source) {
-			return new Usuario(source.readString(), source.readString(), source.readString(), source.readString());
+			String[] data = source.createStringArray();
+			return new Usuario(data[0], data[1], data[2]);
 		}
 
 		@Override
