@@ -29,7 +29,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/welcome_background3"
-        app:srcCompat="@drawable/addBook" />
+        app:srcCompat="@drawable/add_book" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
