@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.retrofit.RetroFitInstance;
 import com.bibmovel.client.retrofit.UsuarioService;
-import com.bibmovel.client.settings.SettingsActivity;
+import com.bibmovel.client.settings.SettingsFragment;
 import com.bibmovel.client.splash.WelcomeScreen;
 import com.bibmovel.client.utils.Values;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             String login = edtUser.getText().toString();
 
             Usuario user = new Usuario(login, new String(Hex.encodeHex(DigestUtils
-                    .sha256(edtPass.getText().toString()))));
+                    .sha512(edtPass.getText().toString()))));
 
             login(user);
         });
@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                 register();
                 break;
             case R.id.item_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivity(new Intent(this, SettingsFragment.class));
                 break;
         }
 
@@ -199,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
 
             Usuario usuario = new Usuario(edt_login.getText().toString()
                     , edt_name.getText().toString(), edt_email.getText().toString()
-                    , new String(Hex.encodeHex(DigestUtils.sha256(edt_pass.getText().toString()))));
+                    , new String(Hex.encodeHex(DigestUtils.sha512(edt_pass.getText().toString()))));
 
             UsuarioService service = RetroFitInstance.getRetrofitInstance()
                     .create(UsuarioService.class);

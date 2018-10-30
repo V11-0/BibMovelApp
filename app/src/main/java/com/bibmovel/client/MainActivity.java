@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         mGoogleSignInAccount = getIntent().getParcelableExtra("google_account");
 
         if (mGoogleSignInAccount == null) {
-            //// TODO: 28/10/18 Usar Parcelable no Usuario e Alterar Splash
             nav_name.setText(mUser.getNome());
             nav_email.setText(mUser.getEmail());
         } else {
