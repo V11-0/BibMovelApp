@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import com.bibmovel.client.LoginActivity;
 import com.bibmovel.client.MainActivity;
 import com.bibmovel.client.R;
+import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.utils.Values;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -69,11 +70,18 @@ public class SplashActivity extends Activity implements Runnable {
             it = new Intent(this, MainActivity.class).putExtra("google_account", signedInAccount);
         else {
 
-            SharedPreferences prefs = getSharedPreferences(Values.getPrefsLogin(), MODE_PRIVATE);
+            SharedPreferences prefs = getSharedPreferences(Values.Preferences.PREFS_LOGIN, MODE_PRIVATE);
 
-            if (prefs.getBoolean(Values.getIsLogeedValueName(), false)) {
-                String login = prefs.getString(Values.getUserLoginValueName(), null);
-                it = new Intent(this, MainActivity.class).putExtra("user_login", login);
+            if (prefs.getBoolean(Values.Preferences.IS_LOGEED_VALUE_NAME, false)) {
+
+                String login = prefs.getString(Values.Preferences.USER_LOGIN_VALUE_NAME, null);
+                String email = prefs.getString(Values.Preferences.USER_EMAIL_VALUE_NAME, null);
+
+                Usuario usuario = new Usuario();
+                usuario.setLogin(login);
+                usuario.setEmail(email);
+
+                it = new Intent(this, MainActivity.class).putExtra("user", usuario);
             }
             else it = new Intent(this, LoginActivity.class);
         }

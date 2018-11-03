@@ -10,12 +10,12 @@ public class Autor {
     @SerializedName("nome") private String nome;
     @SerializedName("dataNascimento") private Date dataNascimento;
     @SerializedName("nacionalidade") private String nacionalidade;
-    @SerializedName("id") private int id;
+    @SerializedName("id") private Integer id;
 	private List<Livro> livros;
 
 	public Autor() {}
 
-    public Autor(String nome, Date dataNascimento, String nacionalidade, int id) {
+    public Autor(String nome, Date dataNascimento, String nacionalidade, Integer id) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.nacionalidade = nacionalidade;
@@ -50,11 +50,11 @@ public class Autor {
         this.nacionalidade = nacionalidade;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -10,14 +10,14 @@ public class Livro {
     @SerializedName("isbn") private String isbn;
     @SerializedName("nomeArquivo") private String nomeArquivo;
 	@SerializedName("genero") private String genero;
-	@SerializedName("anoPublicacao") private short anoPublicacao;
+	@SerializedName("anoPublicacao") private Short anoPublicacao;
     private Editora editora;
-    @SerializedName("classificacaoMedia") private float classificacaoMedia;
+    @SerializedName("classificacaoMedia") private Float classificacaoMedia;
     private List<Autor> autores;
 
     public Livro() {}
 
-    public Livro(String titulo, String isbn, String nomeArquivo, String genero, short anoPublicacao) {
+    public Livro(String titulo, String isbn, String nomeArquivo, String genero, Short anoPublicacao) {
         this.titulo = titulo;
         this.isbn = isbn;
         this.nomeArquivo = nomeArquivo;
@@ -25,7 +25,7 @@ public class Livro {
         this.anoPublicacao = anoPublicacao;
     }
 
-    public Livro(String titulo, String nomeArquivo, float classificacaoMedia) {
+    public Livro(String titulo, String nomeArquivo, Float classificacaoMedia) {
         this.titulo = titulo;
         this.nomeArquivo = nomeArquivo;
         this.classificacaoMedia = classificacaoMedia;
@@ -63,11 +63,11 @@ public class Livro {
         this.genero = genero;
     }
 
-    public short getAnoPublicacao() {
+    public Short getAnoPublicacao() {
         return anoPublicacao;
     }
 
-    public void setAnoPublicacao(short anoPublicacao) {
+    public void setAnoPublicacao(Short anoPublicacao) {
         this.anoPublicacao = anoPublicacao;
     }
 
@@ -79,11 +79,11 @@ public class Livro {
         this.editora = editora;
     }
 
-    public float getClassificacaoMedia() {
+    public Float getClassificacaoMedia() {
         return classificacaoMedia;
     }
 
-    public void setClassificacaoMedia(float classificacaoMedia) {
+    public void setClassificacaoMedia(Float classificacaoMedia) {
         this.classificacaoMedia = classificacaoMedia;
     }
 
