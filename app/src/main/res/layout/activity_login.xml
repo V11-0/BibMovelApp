@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/app_background"
     tools:context=".LoginActivity"
     android:gravity="center">
 
@@ -18,6 +17,7 @@
             android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="125dp"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:contentDescription="logo"
             app:srcCompat="@drawable/ic_logo" />
@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/image"
+            android:background="@color/almost_transparent"
             android:gravity="center_vertical"
             android:layout_above="@id/btn_login">
 
@@ -63,7 +64,7 @@
             android:layout_above="@id/text_google"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:background="@color/almost_transparent"
+            android:background="@color/logoBlue"
             android:text="Entrar" />
 
         <TextView
@@ -73,7 +74,7 @@
             android:layout_above="@+id/g_sign_in"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:text="Ou entre com sua conta Google"
+            android:text="Ou"
             android:layout_marginBottom="@dimen/fab_margin"
             android:textColor="@color/black"
             android:textSize="17sp" />

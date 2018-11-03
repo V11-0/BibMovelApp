@@ -11,4 +11,5 @@
     <color name="welcome_background1">#f52bf8</color>
     <color name="welcome_background2">#2a8fdd</color>
     <color name="welcome_background3">#24d247</color>
+    <color name="logoBlue">#33cccc</color>
 </resources>
