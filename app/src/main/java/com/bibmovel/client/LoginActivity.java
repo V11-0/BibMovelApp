@@ -101,6 +101,10 @@ public class LoginActivity extends AppCompatActivity {
                 login(account);
             } catch (Exception e) {
                 e.printStackTrace();
+
+                if (e.getMessage().contains("7"))
+                    Toast.makeText(this, "Ocorreu um erro, tente novamente"
+                            , Toast.LENGTH_LONG).show();
             }
         }
 
@@ -160,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_login, menu);
+        getMenuInflater().inflate(R.menu.menu_common, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

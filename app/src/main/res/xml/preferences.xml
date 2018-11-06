@@ -7,6 +7,10 @@
     <Preference
         android:key="pref_update"
         android:title="Verificar por Atualizações"
-        android:icon="@drawable/ic_update_black_24dp"/>
+        android:icon="@drawable/ic_update_black_24dp" />
+
+    <Preference
+        android:key="pref_licenses"
+        android:title="Licenças de Código Aberto" />
 
 </PreferenceScreen>

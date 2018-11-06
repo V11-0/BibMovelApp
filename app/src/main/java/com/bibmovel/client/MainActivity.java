@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bibmovel.client.model.vo.Usuario;
+import com.bibmovel.client.settings.SettingsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -132,12 +133,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_common, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -151,6 +160,7 @@ public class MainActivity extends AppCompatActivity
 
                 File file = new File(data.getData().getPath());
 
+                // TODO: 06/11/2018 Realizar Upload
                 Toast.makeText(this, file.getName(), Toast.LENGTH_LONG).show();
             }
         }

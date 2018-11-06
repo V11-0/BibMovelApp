@@ -15,6 +15,7 @@ import com.bibmovel.client.R;
 import com.bibmovel.client.utils.Channels;
 import com.bibmovel.client.utils.ConnectionFactory;
 import com.bibmovel.client.utils.Values;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedInputStream;
@@ -50,6 +51,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             downloadUpdate.execute(null, null, null);
 
             return true;
+        });
+
+        Preference about = findPreference("pref_licenses");
+        about.setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getContext(), OssLicensesMenuActivity.class));
+            return false;
         });
     }
 
