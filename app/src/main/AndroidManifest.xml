@@ -27,18 +27,15 @@
             android:label="@string/title_activity_main"
             android:parentActivityName=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bibmovel.client.LoginActivity" />
-        </activity>
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".splash.SplashActivity"
-            android:theme="@style/Splash"
+            android:theme="@style/AppTheme.Splash"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,10 +44,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".BookDetailsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:theme="@style/AppTheme.Collapsing">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bibmovel.client.MainActivity" />
+        </activity>
         <activity
             android:name=".splash.WelcomeScreen"
-            android:theme="@style/Welcome" android:screenOrientation="portrait"/>
+            android:theme="@style/AppTheme.Welcome" android:screenOrientation="portrait"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

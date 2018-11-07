@@ -17,16 +17,25 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="Splash" parent="Theme.AppCompat.Light">
+    <style name="AppTheme.Splash" parent="Theme.AppCompat.Light">
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:statusBarColor">#ffffff</item>
+        <item name="android:statusBarColor" tools:targetApi="m">#ffffff</item>
         <item name="android:navigationBarColor">#ffffff</item>
         <item name="android:background">#ffffff</item>
     </style>
 
-    <style name="Welcome" parent="WelcomeScreenTheme">
+    <style name="AppTheme.Welcome" parent="WelcomeScreenTheme">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="AppTheme.Collapsing" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
     </style>
 
 </resources>

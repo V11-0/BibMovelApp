@@ -88,10 +88,10 @@ public class MainActivity extends AppCompatActivity
         mGoogleSignInAccount = getIntent().getParcelableExtra("google_account");
         mUser = getIntent().getParcelableExtra("user");
 
-        if (mGoogleSignInAccount == null) {
+        if (mUser != null) {
             nav_name.setText(mUser.getLogin());
             nav_email.setText(mUser.getEmail());
-        } else {
+        } else if (mGoogleSignInAccount != null) {
             nav_name.setText(mGoogleSignInAccount.getDisplayName());
             nav_email.setText(mGoogleSignInAccount.getEmail());
         }

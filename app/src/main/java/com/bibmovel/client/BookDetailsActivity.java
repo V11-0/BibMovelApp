@@ -8,6 +8,7 @@ import com.bibmovel.client.model.vo.Autor;
 import com.bibmovel.client.model.vo.Livro;
 import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,11 +17,15 @@ import retrofit2.Response;
 public class BookDetailsActivity extends AppCompatActivity {
 
     private Livro livro;
+    private CollapsingToolbarLayout mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_book_details);
+        setContentView(R.layout.activity_book_details);
+
+        mToolbar = findViewById(R.id.collapsing_toolbar);
+        mToolbar.setTitle("Titúlo");
 
         String bookIsbn = getIntent().getStringExtra("bookIsbn");
 
@@ -43,7 +48,6 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     private void setData() {
 
-        EditText edt_title = findViewById(R.id.det_title);
         EditText edt_isbn = findViewById(R.id.det_isbn);
         EditText edt_gender = findViewById(R.id.det_gender);
         EditText edt_year = findViewById(R.id.det_publ_year);
@@ -51,7 +55,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         EditText edt_editor = findViewById(R.id.det_editor);
         EditText edt_author = findViewById(R.id.det_author);
 
-        edt_title.setText(livro.getTitulo());
+        mToolbar.setTitle(livro.getTitulo());
         edt_isbn.setText(livro.getIsbn());
         edt_gender.setText(livro.getGenero());
         edt_year.setText(String.valueOf(livro.getAnoPublicacao()));
