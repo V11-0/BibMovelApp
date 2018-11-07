@@ -22,10 +22,11 @@ import java.util.List;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
     private List<Livro> books;
+
     public BookAdapter(List<Livro> books) {
         this.books = books;
     }
-    private String url="";
+
     @NonNull
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +53,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                 switch (id) {
 
                     case R.id.menu_baixar:
+                        Livro livro = books.get(position);
 
                 }
 
