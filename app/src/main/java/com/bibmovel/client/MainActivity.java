@@ -1,13 +1,17 @@
 package com.bibmovel.client;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bibmovel.client.model.vo.Usuario;
+import com.bibmovel.client.settings.SettingsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("application/pdf");
-            startActivityForResult(intent, Values.getPickfileRequestCode());
+            startActivityForResult(intent, Values.Codes.PICKFILE_REQUEST_CODE);
         });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -81,9 +86,10 @@ public class MainActivity extends AppCompatActivity
         TextView nav_email = navigationView.getHeaderView(0).findViewById(R.id.nav_header_email);
 
         mGoogleSignInAccount = getIntent().getParcelableExtra("google_account");
+        mUser = getIntent().getParcelableExtra("user");
 
         if (mGoogleSignInAccount == null) {
-            nav_name.setText(mUser.getNome());
+            nav_name.setText(mUser.getLogin());
             nav_email.setText(mUser.getEmail());
         } else {
             nav_name.setText(mGoogleSignInAccount.getDisplayName());
@@ -127,12 +133,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_common, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.item_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -140,12 +154,13 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Values.getPickfileRequestCode()) {
+        if (requestCode == Values.Codes.PICKFILE_REQUEST_CODE) {
 
             if (data != null) {
 
                 File file = new File(data.getData().getPath());
 
+                // TODO: 06/11/2018 Realizar Upload
                 Toast.makeText(this, file.getName(), Toast.LENGTH_LONG).show();
             }
         }
@@ -162,12 +177,23 @@ public class MainActivity extends AppCompatActivity
             GoogleSignInClient client = GoogleSignIn.getClient(this, gso);
             client.signOut();
 
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        } else {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+        } else if (mUser != null) {
+
+            SharedPreferences loginPreferences = getSharedPreferences(Values.Preferences.PREFS_LOGIN
+                    , MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = loginPreferences.edit();
+
+            editor.putBoolean(Values.Preferences.IS_LOGEED_VALUE_NAME, false);
+            editor.remove(Values.Preferences.USER_LOGIN_VALUE_NAME);
+            editor.remove(Values.Preferences.USER_EMAIL_VALUE_NAME);
+
+            editor.apply();
+
         }
+
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
     @Override

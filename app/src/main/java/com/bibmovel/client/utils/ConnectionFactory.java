@@ -9,7 +9,7 @@ import jcifs.smb.SmbFile;
  */
 public abstract class ConnectionFactory {
 
-    public static SmbFile getSmbConnection() throws MalformedURLException {
-        return new SmbFile("smb://192.168.0.1/Public/Books/");
+    public static SmbFile getSmbConnection(String path) throws MalformedURLException {
+        return new SmbFile("smb://192.168.0.100/BibMovel/" + path);
     }
 }

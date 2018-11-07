@@ -20,7 +20,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_details);
+        setContentView(R.layout.content_book_details);
 
         String bookIsbn = getIntent().getStringExtra("bookIsbn");
 

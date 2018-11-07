@@ -36,6 +36,10 @@ public class Usuario implements Parcelable {
 		return login;
 	}
 
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
 	public String getNome() {
 		return nome;
 	}
@@ -56,6 +60,7 @@ public class Usuario implements Parcelable {
 		return senha;
 	}
 
+	// TODO: 30/10/18 Melhorar aqui
 	@Override
 	public int describeContents() {
 		return 0;

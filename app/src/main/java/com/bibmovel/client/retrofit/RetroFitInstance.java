@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetroFitInstance {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://192.168.0.100:8080/BibMovel_war_exploded/rest/";
+    private static final String BASE_URL = "http://192.168.0.100:8080/BibMovel/rest/";
 
     public static Retrofit getRetrofitInstance() {
 

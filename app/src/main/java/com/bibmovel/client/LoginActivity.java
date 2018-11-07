@@ -3,6 +3,7 @@ package com.bibmovel.client;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.retrofit.RetroFitInstance;
 import com.bibmovel.client.retrofit.UsuarioService;
-import com.bibmovel.client.settings.SettingsFragment;
+import com.bibmovel.client.settings.SettingsActivity;
 import com.bibmovel.client.splash.WelcomeScreen;
 import com.bibmovel.client.utils.Values;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -84,14 +85,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startGoogleSignIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, Values.getRcGSignIn());
+        startActivityForResult(signInIntent, Values.Codes.RC_G_SIGN_IN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Values.getRcGSignIn()) {
+        if (requestCode == Values.Codes.RC_G_SIGN_IN) {
 
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
@@ -100,6 +101,10 @@ public class LoginActivity extends AppCompatActivity {
                 login(account);
             } catch (Exception e) {
                 e.printStackTrace();
+
+                if (e.getMessage().contains("7"))
+                    Toast.makeText(this, "Ocorreu um erro, tente novamente"
+                            , Toast.LENGTH_LONG).show();
             }
         }
 
@@ -115,17 +120,23 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     Intent it = new Intent(LoginActivity.this, MainActivity.class);
-                    it.putExtra("user_login", usuario.getLogin());
 
-                    SharedPreferences.Editor editor = getSharedPreferences(Values.getPrefsLogin()
-                            , MODE_PRIVATE).edit();
+                    Usuario usuario = response.body();
+                    it.putExtra("user", usuario);
 
-                    editor.putBoolean(Values.getIsLogeedValueName(), true);
-                    editor.putString(Values.getUserLoginValueName(), usuario.getLogin());
+                    SharedPreferences.Editor editor = getSharedPreferences
+                            (Values.Preferences.PREFS_LOGIN, MODE_PRIVATE).edit();
+
+                    editor.putBoolean(Values.Preferences.IS_LOGEED_VALUE_NAME, true);
+
+                    assert usuario != null;
+                    editor.putString(Values.Preferences.USER_LOGIN_VALUE_NAME, usuario.getLogin());
+                    editor.putString(Values.Preferences.USER_EMAIL_VALUE_NAME, usuario.getEmail());
 
                     editor.apply();
 
                     startActivity(it);
+                    finish();
                 }
                 else if (response.code() == 404) {
                     edtUser.setError("Credenciais Incorretas");
@@ -153,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_login, menu);
+        getMenuInflater().inflate(R.menu.menu_common, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -165,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                 register();
                 break;
             case R.id.item_settings:
-                startActivity(new Intent(this, SettingsFragment.class));
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
 
@@ -208,7 +220,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Usuario> call, Response<Usuario> response) {
 
-                    if (response.code() == 200) {
+                    if (response.isSuccessful()) {
                         Snackbar.make(LoginActivity.this.edtUser, "Usuário Criado"
                                 , Snackbar.LENGTH_LONG).show();
                         dlg.dismiss();
@@ -217,6 +229,10 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Já existe um usuário com este" +
                                 " login, por favor, escolha outro", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
+                    }
+                    else {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Log.d("Retrofit", response.message());
                     }
 
                 }
