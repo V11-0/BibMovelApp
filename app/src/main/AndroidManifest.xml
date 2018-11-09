@@ -25,9 +25,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:parentActivityName=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true"
+            android:theme="@style/AppTheme.Drawer"
             android:screenOrientation="portrait" />
         <activity
             android:name=".settings.SettingsActivity"
@@ -46,10 +44,8 @@
         <activity android:name=".BookDetailsActivity"
             android:screenOrientation="portrait"
             android:exported="true"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.Collapsing">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bibmovel.client.MainActivity" />
         </activity>
         <activity
             android:name=".splash.WelcomeScreen"

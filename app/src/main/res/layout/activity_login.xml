@@ -28,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/image"
-            android:background="@color/almost_transparent"
             android:gravity="center_vertical"
             android:layout_above="@id/btn_login">
 
@@ -64,7 +63,7 @@
             android:layout_above="@id/text_google"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:background="@color/logoBlue"
+            android:background="@color/colorAccent"
             android:text="Entrar" />
 
         <TextView
@@ -76,7 +75,7 @@
             android:layout_gravity="center"
             android:text="Ou"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:textColor="@color/black"
+            android:textColor="@android:color/black"
             android:textSize="17sp" />
 
         <com.google.android.gms.common.SignInButton

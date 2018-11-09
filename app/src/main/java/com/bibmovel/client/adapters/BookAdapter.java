@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bibmovel.client.BookDetailsActivity;
 import com.bibmovel.client.R;
+import com.bibmovel.client.model.vo.Autor;
 import com.bibmovel.client.model.vo.Livro;
 
 import java.util.List;
@@ -37,30 +37,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
 
-        //// TODO: 22/10/18 Pegar thumb do arquivo
-        holder.bookName.setText(books.get(position).getTitulo());
-        holder.bookRating.setText(String.valueOf(books.get(position).getClassificacaoMedia()));
+        Livro book = books.get(position);
+        holder.bookName.setText(book.getTitulo());
 
-        holder.menuOptions.setOnClickListener(v -> {
+        List<Autor> autores = book.getAutores();
 
-            PopupMenu popup = new PopupMenu(v.getContext(), holder.menuOptions);
-            popup.inflate(R.menu.book_menu);
+        for (int i = 0; i < autores.size(); i++) {
 
-            popup.setOnMenuItemClickListener(item -> {
+            if (i > 0)
+                holder.bookAuthor.append(", ");
 
-                int id = item.getItemId();
+            holder.bookAuthor.setText(autores.get(i).getNome());
+        }
 
-                switch (id) {
+        holder.bookRating.setText(String.valueOf(book.getClassificacaoMedia()));
 
-                    case R.id.menu_baixar:
-                        Livro livro = books.get(position);
+        holder.bookDownload.setOnClickListener(v -> {
 
-                }
-
-                return true;
-            });
-
-            popup.show();
+            // TODO: 07/11/18 Baixar
         });
 
         holder.itemView.setOnClickListener(v -> {
@@ -79,18 +73,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     class BookViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView bookLogo;
         private TextView bookName;
+        private TextView bookAuthor;
         private TextView bookRating;
-        private TextView menuOptions;
+        private ImageButton bookDownload;
 
         BookViewHolder(View itemView) {
             super(itemView);
 
-            bookLogo = itemView.findViewById(R.id.book_logo);
             bookName = itemView.findViewById(R.id.book_name);
+            bookAuthor = itemView.findViewById(R.id.book_author);
             bookRating = itemView.findViewById(R.id.book_rating);
-            menuOptions = itemView.findViewById(R.id.menuOptions);
+            bookDownload = itemView.findViewById(R.id.book_download);
         }
     }
 }

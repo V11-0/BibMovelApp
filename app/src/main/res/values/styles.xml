@@ -2,7 +2,6 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -29,13 +28,14 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="AppTheme.Collapsing" parent="AppTheme.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:statusBarColor">@android:color/transparent</item>
+    <style name="AppTheme.Collapsing" parent="AppTheme.Drawer">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
 
+    <style name="AppTheme.Drawer" parent="AppTheme.NoActionBar">
+        <item name="android:statusBarColor">@color/almost_transparent</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
 </resources>

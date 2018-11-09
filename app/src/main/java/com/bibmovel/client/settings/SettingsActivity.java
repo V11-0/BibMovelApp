@@ -1,6 +1,7 @@
 package com.bibmovel.client.settings;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,5 +17,19 @@ public class SettingsActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment()).commit();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

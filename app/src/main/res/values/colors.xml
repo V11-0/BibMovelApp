@@ -2,14 +2,11 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#33CCCC</color>
     <color name="dark_gray">#A9A9A9</color>
-    <color name="black">#000000</color>
-    <color name="transparent">#00000000</color>
-    <color name="almost_transparent">#38ffffff</color>
+    <color name="almost_transparent">#26000000</color>
 
     <color name="welcome_background1">#f52bf8</color>
     <color name="welcome_background2">#2a8fdd</color>
     <color name="welcome_background3">#24d247</color>
-    <color name="logoBlue">#33cccc</color>
 </resources>
