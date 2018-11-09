@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="Sobre" />
+    <PreferenceCategory android:title="Sobre" />
 
     <Preference
+        android:icon="@drawable/ic_update_black_24dp"
         android:key="pref_update"
-        android:title="Verificar por Atualizações"
-        android:icon="@drawable/ic_update_black_24dp" />
+        android:title="Verificar por Atualizações" />
 
     <Preference
         android:key="pref_licenses"

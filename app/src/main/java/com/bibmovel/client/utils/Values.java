@@ -21,7 +21,7 @@ public abstract class Values {
     }
 
 
-    public abstract  class Notification {
+    public abstract class Notification {
         public static final String CHANNEL_DOWNLOAD_ID = BuildConfig.APPLICATION_ID + ".DOWNLOAD";
         public static final String CHANNEL_DOWNLOAD_NAME = "Downloads";
     }

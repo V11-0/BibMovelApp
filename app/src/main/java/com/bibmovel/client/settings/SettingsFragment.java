@@ -119,7 +119,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         .setOngoing(false)
                         .setAutoCancel(true);
 
-                mNotifierManager.notify(0 , mBuilder.build());
+                mNotifierManager.notify(0, mBuilder.build());
             }
         }
 
@@ -182,10 +182,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         while (download.isAlive()) {
 
                             double file_lenght = file.length();
-                            double progress = ( file_lenght / size) * 100;
+                            double progress = (file_lenght / size) * 100;
 
                             mBuilder.setProgress(100, (int) progress, false)
-                                .setContentInfo(nf.format(progress) + "%");
+                                    .setContentInfo(nf.format(progress) + "%");
 
                             mNotifierManager.notify(0, mBuilder.build());
 

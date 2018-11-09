@@ -137,8 +137,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     startActivity(it);
                     finish();
-                }
-                else if (response.code() == 404) {
+                } else if (response.code() == 404) {
                     edtUser.setError("Credenciais Incorretas");
                     edtPass.setError("Credenciais Incorretas");
                 }
@@ -224,13 +223,11 @@ public class LoginActivity extends AppCompatActivity {
                         Snackbar.make(LoginActivity.this.edtUser, "Usuário Criado"
                                 , Snackbar.LENGTH_LONG).show();
                         dlg.dismiss();
-                    }
-                    else if (response.code() == 409) {
+                    } else if (response.code() == 409) {
                         Toast.makeText(LoginActivity.this, "Já existe um usuário com este" +
                                 " login, por favor, escolha outro", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
-                    }
-                    else {
+                    } else {
                         progressBar.setVisibility(View.INVISIBLE);
                         Log.d("Retrofit", response.message());
                     }

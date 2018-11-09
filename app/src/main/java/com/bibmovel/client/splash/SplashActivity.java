@@ -23,8 +23,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 
 /**
- * Created by vinibrenobr11 on 03/03/2017 at 00:54<br></br>
- *
+ * Created by vinibrenobr11 on 03/03/2017 at 00:54<br />
+ * <p>
  * Essa Classe que tem a função de gerenciar e exibir tela
  * de "Splash", ou de apresentação no início da execução
  * do app, ultilizando uma interface @{@link Runnable}
@@ -82,8 +82,7 @@ public class SplashActivity extends Activity implements Runnable {
                 usuario.setEmail(email);
 
                 it = new Intent(this, MainActivity.class).putExtra("user", usuario);
-            }
-            else it = new Intent(this, LoginActivity.class);
+            } else it = new Intent(this, LoginActivity.class);
         }
 
         startActivity(it);

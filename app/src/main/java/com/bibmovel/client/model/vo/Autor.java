@@ -11,9 +11,10 @@ public class Autor {
     @SerializedName("dataNascimento") private Date dataNascimento;
     @SerializedName("nacionalidade") private String nacionalidade;
     @SerializedName("id") private Integer id;
-	private List<Livro> livros;
+    private List<Livro> livros;
 
-	public Autor() {}
+    public Autor() {
+    }
 
     public Autor(String nome, Date dataNascimento, String nacionalidade, Integer id) {
         this.nome = nome;

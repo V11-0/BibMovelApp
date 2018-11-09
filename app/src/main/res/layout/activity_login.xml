@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".LoginActivity"
-    android:gravity="center">
+    tools:context=".LoginActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/fab_margin">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image"
@@ -24,35 +24,35 @@
 
         <LinearLayout
             android:id="@+id/linear"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/btn_login"
             android:layout_below="@id/image"
             android:gravity="center_vertical"
-            android:layout_above="@id/btn_login">
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/edt_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/almost_transparent"
                 android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:background="@color/almost_transparent"
                 android:hint="Usuário"
-                android:textSize="22sp"
                 android:inputType="text"
-                android:layout_marginBottom="@dimen/fab_margin"/>
+                android:textSize="22sp" />
 
             <EditText
                 android:id="@+id/edt_pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fab_margin"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/fab_margin"
                 android:background="@color/almost_transparent"
                 android:hint="Senha"
-                android:textSize="22sp"
                 android:inputType="textPassword"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textSize="22sp" />
 
         </LinearLayout>
 
@@ -73,8 +73,8 @@
             android:layout_above="@+id/g_sign_in"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:text="Ou"
             android:layout_marginBottom="@dimen/fab_margin"
+            android:text="Ou"
             android:textColor="@android:color/black"
             android:textSize="17sp" />
 

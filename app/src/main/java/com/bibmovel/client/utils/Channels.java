@@ -13,6 +13,7 @@ public abstract class Channels {
 
     /**
      * Cria um canal de notificção e o retorna
+     *
      * @return NotificationChannel Download
      */
     @RequiresApi(Build.VERSION_CODES.O)

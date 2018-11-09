@@ -10,7 +10,8 @@ public class Classificacao {
     @SerializedName("classificacao") private Float classificacao;
     @SerializedName("comentario") private String comentario;
 
-    public Classificacao() {}
+    public Classificacao() {
+    }
 
     public Classificacao(Usuario usuario, Livro livro, Float classificacao, String comentario) {
         this.usuario = usuario;

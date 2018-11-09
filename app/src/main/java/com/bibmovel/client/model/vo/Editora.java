@@ -10,7 +10,8 @@ public class Editora {
     @SerializedName("cnpj") private String cnpj;
     private List<Livro> livros;
 
-    public Editora() {}
+    public Editora() {
+    }
 
     public Editora(String nome, String cnpj) {
         this.nome = nome;

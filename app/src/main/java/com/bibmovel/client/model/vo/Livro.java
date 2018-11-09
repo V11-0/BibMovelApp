@@ -9,13 +9,15 @@ public class Livro {
     @SerializedName("titulo") private String titulo;
     @SerializedName("isbn") private String isbn;
     @SerializedName("nomeArquivo") private String nomeArquivo;
-	@SerializedName("genero") private String genero;
-	@SerializedName("anoPublicacao") private Short anoPublicacao;
+    @SerializedName("genero") private String genero;
+    @SerializedName("anoPublicacao") private Short anoPublicacao;
     private Editora editora;
-    @SerializedName("classificacaoMedia") private Float classificacaoMedia;
+    @SerializedName("classificacaoMedia")
+    private Float classificacaoMedia;
     private List<Autor> autores;
 
-    public Livro() {}
+    public Livro() {
+    }
 
     public Livro(String titulo, String isbn, String nomeArquivo, String genero, Short anoPublicacao) {
         this.titulo = titulo;
