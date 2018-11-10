@@ -1,8 +1,8 @@
 package com.bibmovel.client.adapters;
 
+import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +11,16 @@ import android.widget.TextView;
 
 import com.bibmovel.client.BookDetailsActivity;
 import com.bibmovel.client.R;
-import com.bibmovel.client.model.vo.Autor;
 import com.bibmovel.client.model.vo.Livro;
+import com.bibmovel.client.services.DownloadService;
+import com.bibmovel.client.utils.Values;
 
+import java.io.File;
 import java.util.List;
+import java.util.function.Predicate;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by vinibrenobr11 on 08/09/18 at 13:19
@@ -38,29 +44,25 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
 
         Livro book = books.get(position);
+
         holder.bookName.setText(book.getTitulo());
-
-        List<Autor> autores = book.getAutores();
-
-        for (int i = 0; i < autores.size(); i++) {
-
-            if (i > 0)
-                holder.bookAuthor.append(", ");
-
-            holder.bookAuthor.setText(autores.get(i).getNome());
-        }
-
+        holder.bookAuthor.setText(book.getAutor());
         holder.bookRating.setText(String.valueOf(book.getClassificacaoMedia()));
-
         holder.bookDownload.setOnClickListener(v -> {
 
-            // TODO: 07/11/18 Baixar
+            Context context = v.getContext();
+
+            Intent download = new Intent(context, DownloadService.class);
+            download.putExtra("isBook", true);
+            download.putExtra("bookName", book.getNomeArquivo());
+
+            context.startService(download);
         });
 
         holder.itemView.setOnClickListener(v -> {
 
             Intent intent = new Intent(v.getContext(), BookDetailsActivity.class);
-            intent.putExtra("bookIsbn", books.get(holder.getAdapterPosition()).getIsbn());
+            intent.putExtra("bookPath", books.get(holder.getAdapterPosition()).getNomeArquivo());
 
             v.getContext().startActivity(intent);
         });
@@ -69,6 +71,23 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public void removeNotDownloadedBooks() {
+
+        File download_folder = new File(Values.Path.DOWNLOAD_BOOKS);
+
+        if (download_folder.isDirectory()) {
+
+            for (File file : download_folder.listFiles()) {
+
+                Predicate<Livro> livroPredicate = livro -> livro.getNomeArquivo()
+                        .equals(file.getName());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    books.removeIf(livroPredicate);
+            }
+        }
     }
 
     class BookViewHolder extends RecyclerView.ViewHolder {

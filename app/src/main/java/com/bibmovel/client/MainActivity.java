@@ -3,24 +3,6 @@ package com.bibmovel.client;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bibmovel.client.model.vo.Usuario;
-import com.bibmovel.client.settings.SettingsActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,19 +11,30 @@ import android.widget.Toast;
 
 import com.bibmovel.client.adapters.BookAdapter;
 import com.bibmovel.client.model.vo.Livro;
+import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
+import com.bibmovel.client.settings.SettingsActivity;
 import com.bibmovel.client.utils.Values;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +44,8 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleSignInAccount mGoogleSignInAccount = null;
     private Usuario mUser = null;
+
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +71,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_books_all);
+        getSupportActionBar().setTitle("Todos os Livros");
 
-        RecyclerView recyclerView = findViewById(R.id.rv_books);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        new LinearSnapHelper().attachToRecyclerView(recyclerView);
+        recyclerView = findViewById(R.id.rv_books);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         TextView nav_name = navigationView.getHeaderView(0).findViewById(R.id.nav_header_name);
         TextView nav_email = navigationView.getHeaderView(0).findViewById(R.id.nav_header_email);
@@ -105,10 +100,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<Livro>> call, Response<List<Livro>> response) {
 
+                Log.d("URL", "Entrou no onResponse");
+
                 if (response.body() != null) {
-                    List<Livro> livros = new ArrayList<>(response.body());
+                    List<Livro> livros = response.body();
                     BookAdapter adapter = new BookAdapter(livros);
                     recyclerView.setAdapter(adapter);
+                    recyclerView.scheduleLayoutAnimation();
+                } else {
+                    Log.wtf("onResponse", "There is no Response");
                 }
 
             }
@@ -198,10 +198,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        switch (id) {
+        switch (item.getItemId()) {
+
+            case R.id.nav_books_all:
+                break;
+
+            case R.id.nav_books_downloaded:
+                BookAdapter adapter = (BookAdapter) recyclerView.getAdapter();
+                adapter.removeNotDownloadedBooks();
+                recyclerView.setAdapter(adapter);
+                break;
+
             case R.id.nav_exit:
                 signOut();
                 break;

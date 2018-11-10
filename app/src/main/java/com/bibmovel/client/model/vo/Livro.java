@@ -11,25 +11,17 @@ public class Livro {
     @SerializedName("nomeArquivo") private String nomeArquivo;
     @SerializedName("genero") private String genero;
     @SerializedName("anoPublicacao") private Short anoPublicacao;
-    private Editora editora;
-    @SerializedName("classificacaoMedia")
-    private Float classificacaoMedia;
-    private List<Autor> autores;
+    @SerializedName("editora") private String editora;
+    @SerializedName("classificacaoMedia") private Float classificacaoMedia;
+    @SerializedName("autor") private String autor;
 
     public Livro() {
     }
 
-    public Livro(String titulo, String isbn, String nomeArquivo, String genero, Short anoPublicacao) {
-        this.titulo = titulo;
-        this.isbn = isbn;
-        this.nomeArquivo = nomeArquivo;
-        this.genero = genero;
-        this.anoPublicacao = anoPublicacao;
-    }
-
-    public Livro(String titulo, String nomeArquivo, Float classificacaoMedia) {
+    public Livro(String titulo, String nomeArquivo, String autor, Float classificacaoMedia) {
         this.titulo = titulo;
         this.nomeArquivo = nomeArquivo;
+        this.autor = autor;
         this.classificacaoMedia = classificacaoMedia;
     }
 
@@ -73,11 +65,11 @@ public class Livro {
         this.anoPublicacao = anoPublicacao;
     }
 
-    public Editora getEditora() {
+    public String getEditora() {
         return editora;
     }
 
-    public void setEditora(Editora editora) {
+    public void setEditora(String editora) {
         this.editora = editora;
     }
 
@@ -89,11 +81,11 @@ public class Livro {
         this.classificacaoMedia = classificacaoMedia;
     }
 
-    public List<Autor> getAutores() {
-        return autores;
+    public String getAutor() {
+        return autor;
     }
 
-    public void setAutores(List<Autor> autores) {
-        this.autores = autores;
+    public void setAutor(String autor) {
+        this.autor = autor;
     }
 }

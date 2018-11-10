@@ -7,17 +7,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Usuario implements Parcelable {
 
-    @SerializedName("nome")
-    private String nome;
-
-    @SerializedName("email")
-    private String email;
-
-    @SerializedName("senha")
-    private String senha;
-
-    @SerializedName("login")
-    private String login;
+    @SerializedName("nome") private String nome;
+    @SerializedName("email") private String email;
+    @SerializedName("senha") private String senha;
+    @SerializedName("login") private String login;
 
     public Usuario() {
     }

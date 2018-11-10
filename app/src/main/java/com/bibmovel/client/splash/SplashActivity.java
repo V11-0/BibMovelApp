@@ -17,7 +17,6 @@ import com.bibmovel.client.MainActivity;
 import com.bibmovel.client.R;
 import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.utils.Values;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 

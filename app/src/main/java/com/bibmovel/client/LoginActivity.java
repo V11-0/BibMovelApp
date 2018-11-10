@@ -1,7 +1,9 @@
 package com.bibmovel.client;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -106,6 +108,15 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this, "Ocorreu um erro, tente novamente"
                             , Toast.LENGTH_LONG).show();
             }
+        }
+
+        if (requestCode == WelcomeHelper.DEFAULT_WELCOME_SCREEN_REQUEST
+                && Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+
+            String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE
+                    , Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+            requestPermissions(permissions, 5);
         }
 
     }

@@ -20,36 +20,39 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.Drawer"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Drawer" />
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".splash.SplashActivity"
-            android:theme="@style/AppTheme.Splash"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BookDetailsActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".BookDetailsActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.Collapsing">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Collapsing" />
         <activity
             android:name=".splash.WelcomeScreen"
-            android:theme="@style/AppTheme.Welcome" android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Welcome" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -57,8 +60,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/paths"/>
+                android:resource="@xml/paths" />
         </provider>
+        <service android:name=".services.DownloadService" />
     </application>
 
 </manifest>

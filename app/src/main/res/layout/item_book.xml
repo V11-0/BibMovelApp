@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="7dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,6 @@
                 android:id="@+id/book_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/almost_transparent"
                 android:maxLines="2"
                 android:text="Name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
@@ -35,7 +34,6 @@
                 android:id="@+id/book_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/almost_transparent"
                 android:drawableEnd="@drawable/ic_rate"
                 android:drawablePadding="2dp"
                 android:gravity="center_vertical"

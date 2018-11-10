@@ -1,15 +1,14 @@
 package com.bibmovel.client;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.EditText;
 
-import com.bibmovel.client.model.vo.Autor;
 import com.bibmovel.client.model.vo.Livro;
 import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,11 +27,11 @@ public class BookDetailsActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.collapsing_toolbar);
         mToolbar.setTitle("Titúlo");
 
-        String bookIsbn = getIntent().getStringExtra("bookIsbn");
+        String bookPath = getIntent().getStringExtra("bookPath");
 
         LivroService service = RetroFitInstance.getRetrofitInstance().create(LivroService.class);
 
-        service.getLivro(bookIsbn).enqueue(new Callback<Livro>() {
+        service.getLivro(bookPath, "nomeArquivo").enqueue(new Callback<Livro>() {
 
             @Override
             public void onResponse(Call<Livro> call, Response<Livro> response) {
@@ -61,10 +60,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         edt_gender.setText(livro.getGenero());
         edt_year.setText(String.valueOf(livro.getAnoPublicacao()));
         edt_avg.setText(String.valueOf(livro.getClassificacaoMedia()));
-        edt_editor.setText(livro.getEditora().getNome());
-
-        for (Autor a : livro.getAutores()) {
-            edt_author.append(a.getNome());
-        }
+        edt_editor.setText(livro.getEditora());
+        edt_author.setText(livro.getAutor());
     }
 }
