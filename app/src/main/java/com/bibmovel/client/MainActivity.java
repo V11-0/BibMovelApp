@@ -35,6 +35,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleSignInAccount mGoogleSignInAccount = null;
     private Usuario mUser = null;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
 
     @Override
@@ -96,7 +99,17 @@ public class MainActivity extends AppCompatActivity
         Call<List<Livro>> listCall = service.getLivros();
         Log.d("URL", listCall.request().url().toString());
 
-        listCall.enqueue(new Callback<List<Livro>>() {
+        listCall.enqueue(buildBooksCallback());
+
+        mSwipeRefreshLayout = findViewById(R.id.main_swipe_refresh);
+        mSwipeRefreshLayout.setColorSchemeColors(Values.Colors.SWIPE_REFRESH_SCHEME);
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> listCall.clone().enqueue(buildBooksCallback()));
+    }
+
+    private Callback<List<Livro>> buildBooksCallback() {
+
+        return new Callback<List<Livro>>() {
             @Override
             public void onResponse(Call<List<Livro>> call, Response<List<Livro>> response) {
 
@@ -110,14 +123,14 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     Log.wtf("onResponse", "There is no Response");
                 }
-
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<Livro>> call, Throwable t) {
                 t.printStackTrace();
             }
-        });
+        };
     }
 
     @Override

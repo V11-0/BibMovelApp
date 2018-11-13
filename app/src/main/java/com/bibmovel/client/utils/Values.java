@@ -1,5 +1,6 @@
 package com.bibmovel.client.utils;
 
+import android.graphics.Color;
 import android.os.Environment;
 
 import com.bibmovel.client.BuildConfig;
@@ -30,5 +31,10 @@ public abstract class Values {
         public static final String DOWNLOAD_BOOKS = Environment.DIRECTORY_DOWNLOADS + "/BibMovel/";
         public static final String UPDATES_PATH = "Updates/";
         public static final String BOOKS_PATH = "Books/";
+    }
+
+    public abstract static class Colors {
+        public static final int[] SWIPE_REFRESH_SCHEME = {Color.RED, Color.BLUE, Color.CYAN
+                , Color.GREEN, Color.MAGENTA};
     }
 }
