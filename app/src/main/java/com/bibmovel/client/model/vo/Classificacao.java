@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class Classificacao {
 
-
     private Usuario usuario;
     private Livro livro;
     @SerializedName("classificacao") private Float classificacao;
