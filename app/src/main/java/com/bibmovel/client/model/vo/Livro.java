@@ -14,6 +14,7 @@ public class Livro {
     @SerializedName("editora") private String editora;
     @SerializedName("classificacaoMedia") private Float classificacaoMedia;
     @SerializedName("autor") private String autor;
+    private boolean downloaded;
 
     public Livro() {
     }
@@ -23,6 +24,7 @@ public class Livro {
         this.nomeArquivo = nomeArquivo;
         this.autor = autor;
         this.classificacaoMedia = classificacaoMedia;
+        this.downloaded = false;
     }
 
     public String getTitulo() {
@@ -87,5 +89,13 @@ public class Livro {
 
     public void setAutor(String autor) {
         this.autor = autor;
+    }
+
+    public boolean isDownloaded() {
+        return downloaded;
+    }
+
+    public void setDownloaded(boolean downloaded) {
+        this.downloaded = downloaded;
     }
 }

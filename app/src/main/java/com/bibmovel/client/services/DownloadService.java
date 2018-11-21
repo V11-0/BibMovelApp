@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.ResultReceiver;
 
 import com.bibmovel.client.BuildConfig;
 import com.bibmovel.client.utils.Channels;
@@ -25,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.FileProvider;
+
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
 
@@ -55,6 +58,8 @@ public class DownloadService extends IntentService {
         mBuilder = new NotificationCompat.Builder(getBaseContext()
                 , Values.Notification.CHANNEL_DOWNLOAD_ID);
 
+        ResultReceiver receiver = intent.getParcelableExtra("receiver");
+
         try {
 
             SmbFile dir;
@@ -72,8 +77,16 @@ public class DownloadService extends IntentService {
 
                     if (smbFile.getName().equals(file_name)) {
                         try {
-                            downloadFile(smbFile, Values.Path.DOWNLOAD_BOOKS);
-                            buildNotification("Livro Baixado", null, null);
+                            File file = downloadFile(smbFile, Values.Path.DOWNLOAD_BOOKS);
+                            PendingIntent pendingIntent = getBookPendingIntent(file);
+
+                            buildNotification(file.getName() + " Baixado", null, pendingIntent);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("path", file_name);
+
+                            receiver.send(1, bundle);
+
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -104,6 +117,33 @@ public class DownloadService extends IntentService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private PendingIntent getBookPendingIntent(File file) {
+
+        TaskStackBuilder mTask = TaskStackBuilder.create(getBaseContext());
+
+        // Seta um pending intent na notificação, para que quando o usuário clique
+        // na notificação, ela abra a tela de instalação
+        Intent pdf_intent = new Intent(Intent.ACTION_VIEW);
+        Uri file_uri;
+
+        // Para inferior a versão 7.0 do Android
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
+            file_uri = Uri.fromFile(file);
+        else {
+            // Para Versão 7.0 ou superior do Android
+            file_uri = FileProvider.getUriForFile(getBaseContext(),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
+        }
+
+        pdf_intent.setDataAndType(file_uri, "application/pdf");
+        pdf_intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        pdf_intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        mTask.addNextIntent(pdf_intent);
+
+        return mTask.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void promptInstall(File file) {
@@ -140,6 +180,7 @@ public class DownloadService extends IntentService {
 
         mBuilder.setContentTitle(title)
                 .setContentText(text)
+                .setSubText("Download Concluído")
                 .setProgress(0, 0, false)
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentIntent(intent)
@@ -152,65 +193,68 @@ public class DownloadService extends IntentService {
     private File downloadFile(SmbFile smbFile, String dir) throws IOException, InterruptedException {
 
         smbFile.connect();
+        String file_name = dir + "/" + smbFile.getName();
+
+        if (dir.contains(Environment.DIRECTORY_DOWNLOADS)) {
+
+            File bibmovel_dir = new File(dir);
+
+            if (!bibmovel_dir.exists())
+                bibmovel_dir.mkdir();
+        }
+
+        mBuilder.setContentTitle("Baixando")
+                .setSmallIcon(android.R.drawable.stat_sys_download)
+                .setOngoing(true);
+
+        mNotifierManager.notify(0, mBuilder.build());
+
+        double size = smbFile.length();
+
+        Thread download = new Thread(() -> {
+
+            try {
+
+                BufferedInputStream in = new BufferedInputStream(new SmbFileInputStream(smbFile));
+                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file_name));
+
+                byte[] buffer = new byte[4096];
+
+                int len; //Read length
+
+                while ((len = in.read(buffer, 0, buffer.length)) != -1)
+                    out.write(buffer, 0, len);
+
+                out.flush(); //The refresh buffer output stream
+
+                in.close();
+                out.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        download.start();
+
+        DecimalFormat nf = new DecimalFormat("0.00");
+
         File file = new File(dir + "/" + smbFile.getName());
 
-        if (file.createNewFile()) {
+        while (download.isAlive()) {
 
-            mBuilder.setContentTitle("Baixando")
-                    .setSmallIcon(android.R.drawable.stat_sys_download)
-                    .setOngoing(true);
+            double file_lenght = file.length();
+            double progress = (file_lenght / size) * 100;
+
+            mBuilder.setProgress(100, (int) progress, false)
+                    .setSubText(nf.format(progress) + "%");
 
             mNotifierManager.notify(0, mBuilder.build());
 
-            double size = smbFile.length();
-
-            Thread download = new Thread(() -> {
-
-                try {
-
-                    BufferedInputStream in = new BufferedInputStream(new SmbFileInputStream(smbFile));
-                    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-
-                    byte[] buffer = new byte[4096];
-
-                    int len; //Read length
-
-                    while ((len = in.read(buffer, 0, buffer.length)) != -1)
-                        out.write(buffer, 0, len);
-
-                    out.flush(); //The refresh buffer output stream
-
-                    in.close();
-                    out.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            });
-
-            download.start();
-
-            DecimalFormat nf = new DecimalFormat("0.00");
-
-            while (download.isAlive()) {
-
-                double file_lenght = file.length();
-                double progress = (file_lenght / size) * 100;
-
-                mBuilder.setProgress(100, (int) progress, false)
-                        .setContentInfo(nf.format(progress) + "%");
-
-                mNotifierManager.notify(0, mBuilder.build());
-
-                Thread.sleep(1000);
-            }
-
-            return file;
-
-        } else {
-            Log.d("FILE", "Livro já existe");
+            Thread.sleep(1000);
         }
-        return null;
+
+        return file;
     }
 }

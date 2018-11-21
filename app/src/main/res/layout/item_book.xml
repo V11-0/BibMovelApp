@@ -44,10 +44,16 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/book_download"
+            android:id="@+id/book_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_file_download_black_24dp" />
+
+        <ProgressBar
+            android:id="@+id/book_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
     </LinearLayout>
 

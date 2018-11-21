@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,12 +21,14 @@ import com.bibmovel.client.retrofit.UsuarioService;
 import com.bibmovel.client.settings.SettingsActivity;
 import com.bibmovel.client.splash.WelcomeScreen;
 import com.bibmovel.client.utils.Values;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+
 import com.stephentuso.welcome.WelcomeHelper;
 
 import org.apache.commons.codec.binary.Hex;
@@ -75,15 +78,38 @@ public class LoginActivity extends AppCompatActivity {
         edtUser = findViewById(R.id.edt_user);
         edtPass = findViewById(R.id.edt_pass);
 
-        findViewById(R.id.btn_login).setOnClickListener(v -> {
+        Button btn_login = findViewById(R.id.btn_login);
+        ProgressBar login_progress = findViewById(R.id.progress_login);
+
+        btn_login.setOnClickListener(v -> {
+
+            btn_login.setVisibility(View.GONE);
+            login_progress.setVisibility(View.VISIBLE);
 
             String login = edtUser.getText().toString();
 
-            Usuario user = new Usuario(login, new String(Hex.encodeHex(DigestUtils
-                    .sha512(edtPass.getText().toString()))));
+            if (TextUtils.isEmpty(login)) {
+                edtUser.setError("Não pode estar vazio");
+                dismissProgress();
+            } else if (TextUtils.isEmpty(edtPass.getText().toString())) {
+                edtPass.setError("Não pode estar vazio");
+                dismissProgress();
+            } else {
+                Usuario user = new Usuario(login, new String(Hex.encodeHex(DigestUtils
+                        .sha512(edtPass.getText().toString()))));
 
-            login(user);
+                login(user);
+            }
         });
+    }
+
+    private void dismissProgress() {
+
+        Button btn_login = findViewById(R.id.btn_login);
+        ProgressBar login_progress = findViewById(R.id.progress_login);
+
+        login_progress.setVisibility(View.GONE);
+        btn_login.setVisibility(View.VISIBLE);
     }
 
     private void startGoogleSignIn() {
@@ -152,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (response.code() == 404) {
                     edtUser.setError("Credenciais Incorretas");
                     edtPass.setError("Credenciais Incorretas");
+                    dismissProgress();
                 }
             }
 
@@ -159,6 +186,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<Usuario> call, Throwable t) {
                 t.printStackTrace();
                 edtUser.setError(t.getMessage());
+                dismissProgress();
             }
         });
     }
@@ -168,8 +196,20 @@ public class LoginActivity extends AppCompatActivity {
         Intent it = new Intent(this, MainActivity.class);
         it.putExtra("google_account", account);
 
-        startActivity(it);
-        finish();
+        UsuarioService service = RetroFitInstance.getRetrofitInstance().create(UsuarioService.class);
+        service.verifyGoogleAccount(new Usuario(account.getGivenName())).enqueue(new Callback<Usuario>() {
+            @Override
+            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                Log.d("Entrou", "VerifyGoogleAccount onResponse");
+                startActivity(it);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<Usuario> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override

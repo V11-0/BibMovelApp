@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Environment;
 
 import com.bibmovel.client.BuildConfig;
+import com.bibmovel.client.retrofit.RetroFitInstance;
 
 /**
  * Created by vinibrenobr11 on 11/09/2018 at 10:26
@@ -28,9 +29,13 @@ public abstract class Values {
     }
 
     public abstract static class Path {
-        public static final String DOWNLOAD_BOOKS = Environment.DIRECTORY_DOWNLOADS + "/BibMovel/";
+        public static final String DOWNLOAD_BOOKS = Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/BibMovel/";
+
         public static final String UPDATES_PATH = "Updates/";
         public static final String BOOKS_PATH = "Books/";
+
+        public static final String COVER_URL = RetroFitInstance.BASE_URL + "livro/cover/";
     }
 
     public abstract static class Colors {

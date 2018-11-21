@@ -8,4 +8,5 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Definições</string>
     <string name="title_activity_settings">Definições</string>
+    <string name="no_books">Opa, parece que não há livros disponíveis</string>
 </resources>

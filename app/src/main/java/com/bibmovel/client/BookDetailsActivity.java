@@ -1,46 +1,72 @@
 package com.bibmovel.client;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bibmovel.client.adapters.ClassificationAdapter;
 import com.bibmovel.client.model.vo.Classificacao;
 import com.bibmovel.client.model.vo.Livro;
+import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.retrofit.ClassificacaoService;
 import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
+
+import com.bibmovel.client.utils.DownloadImage;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class BookDetailsActivity extends AppCompatActivity {
+public class BookDetailsActivity extends AppCompatActivity implements Observer {
 
     private Livro livro;
     private CollapsingToolbarLayout mToolbar;
 
     private Retrofit instance;
 
+    private Usuario mUser;
+    private GoogleSignInAccount mAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
+        // TODO: 19/11/18 Melhorar Layout
 
         mToolbar = findViewById(R.id.collapsing_toolbar);
         mToolbar.setTitle("Titúlo");
 
         String bookPath = getIntent().getStringExtra("bookPath");
+        mUser = getIntent().getParcelableExtra("user");
+        mAccount = getIntent().getParcelableExtra("google_account");
 
         instance = RetroFitInstance.getRetrofitInstance();
 
@@ -78,12 +104,23 @@ public class BookDetailsActivity extends AppCompatActivity {
         edt_author.setText(livro.getAutor());
 
         RecyclerView recyclerView = findViewById(R.id.rv_comment);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL
+                , false));
 
         ClassificacaoService classificacaoService = instance.create(ClassificacaoService.class);
         classificacaoService.getClassificacoes(livro.getIsbn()).enqueue(new Callback<List<Classificacao>>() {
             @Override
             public void onResponse(Call<List<Classificacao>> call, Response<List<Classificacao>> response) {
-                recyclerView.setAdapter(new ClassificationAdapter(response.body()));
+
+                List<Classificacao> body = response.body();
+
+                if ( (body != null) && (body.size() > 0) ) {
+                    recyclerView.setAdapter(new ClassificationAdapter(body));
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    TextView no_comments = findViewById(R.id.comment_no_comments);
+                    no_comments.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -91,6 +128,8 @@ public class BookDetailsActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+
+        new DownloadImage(livro.getNomeArquivo(), this);
     }
 
     @Override
@@ -113,5 +152,76 @@ public class BookDetailsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showCommentDialog(View view) {
+
+        View dialog_view = getLayoutInflater().inflate(R.layout.dialog_comment, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false).setView(dialog_view);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        FloatingActionButton fab = dialog_view.findViewById(R.id.dialog_fab);
+
+        fab.setOnClickListener(v -> {
+
+            ProgressBar bar = dialog_view.findViewById(R.id.dialog_comment_progress);
+            v.setVisibility(View.GONE);
+            bar.setVisibility(View.VISIBLE);
+
+            RatingBar ratingBar = dialog_view.findViewById(R.id.dialog_rating);
+            EditText edt_comment = dialog_view.findViewById(R.id.dialog_comment);
+
+            float rating = ratingBar.getRating();
+            String comment = edt_comment.getText().toString();
+
+            Classificacao classificacao = new Classificacao();
+
+            if (mAccount == null)
+                classificacao.setUsuario(mUser);
+            else if (mUser == null)
+                classificacao.setUsuario(new Usuario(mAccount.getGivenName()));
+
+            classificacao.setLivro(livro);
+            classificacao.setClassificacao(rating);
+            classificacao.setComentario(comment);
+
+            RetroFitInstance.getRetrofitInstance().create(ClassificacaoService.class)
+                    .createClassificacao(classificacao).enqueue(new Callback<Classificacao>() {
+                @Override
+                public void onResponse(Call<Classificacao> call, Response<Classificacao> response) {
+
+                    if (response.isSuccessful())
+                        Toast.makeText(v.getContext(), "Classificação Inserida", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(v.getContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
+
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onFailure(Call<Classificacao> call, Throwable t) {
+                    t.printStackTrace();
+                    dialog.dismiss();
+                    Toast.makeText(v.getContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
+                }
+            });
+        });
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+        Bitmap cover = (Bitmap) arg;
+
+        Animation animation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        animation.setDuration(2000);
+
+        ImageView cover_view = findViewById(R.id.book_cover);
+        cover_view.setImageBitmap(cover);
+        cover_view.startAnimation(animation);
     }
 }

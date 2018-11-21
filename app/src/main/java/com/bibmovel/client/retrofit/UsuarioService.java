@@ -16,4 +16,7 @@ public interface UsuarioService {
 
     @POST("usuario")
     Call<Usuario> createUser(@Body Usuario usuario);
+
+    @POST("usuario/google")
+    Call<Usuario> verifyGoogleAccount(@Body Usuario google);
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
 import com.bibmovel.client.settings.SettingsActivity;
 import com.bibmovel.client.utils.Values;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView recyclerView;
+    private NavigationView navigationView;
+
+    private Call<List<Livro>> listCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_books_all);
         getSupportActionBar().setTitle("Todos os Livros");
@@ -96,7 +101,7 @@ public class MainActivity extends AppCompatActivity
 
         LivroService service = RetroFitInstance.getRetrofitInstance().create(LivroService.class);
 
-        Call<List<Livro>> listCall = service.getLivros();
+        listCall = service.getLivros();
         Log.d("URL", listCall.request().url().toString());
 
         listCall.enqueue(buildBooksCallback());
@@ -116,12 +121,34 @@ public class MainActivity extends AppCompatActivity
                 Log.d("URL", "Entrou no onResponse");
 
                 if (response.body() != null) {
+
+                    showRecyclerView();
+
                     List<Livro> livros = response.body();
-                    BookAdapter adapter = new BookAdapter(livros);
+                    BookAdapter adapter = null;
+
+                    File download_folder = new File(Values.Path.DOWNLOAD_BOOKS);
+
+                    if (download_folder.isDirectory())
+                        for (File file : download_folder.listFiles())
+                            for (Livro livro : livros) {
+                                if (livro.isDownloaded())
+                                    continue;
+
+                                livro.setDownloaded(file.getName().equals(livro.getNomeArquivo()));
+                            }
+
+                    if (mGoogleSignInAccount == null)
+                        adapter = new BookAdapter(livros, mUser);
+                    else if (mUser == null)
+                        adapter = new BookAdapter(livros, mGoogleSignInAccount);
+
                     recyclerView.setAdapter(adapter);
                     recyclerView.scheduleLayoutAnimation();
+
                 } else {
                     Log.wtf("onResponse", "There is no Response");
+                    dismissRecyclerAndShowMessage(getString(R.string.no_books));
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
             }
@@ -129,8 +156,32 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<List<Livro>> call, Throwable t) {
                 t.printStackTrace();
+                dismissRecyclerAndShowMessage(t.getMessage());
             }
         };
+    }
+
+    private void dismissRecyclerAndShowMessage(String message) {
+        recyclerView.setVisibility(View.GONE);
+
+        TextView text = findViewById(R.id.main_error_text);
+        text.setVisibility(View.VISIBLE);
+        text.setText(message);
+
+        mSwipeRefreshLayout.setRefreshing(false);
+
+        Menu nav_menu = navigationView.getMenu();
+        nav_menu.findItem(R.id.nav_books_all).setVisible(false);
+        nav_menu.findItem(R.id.nav_books_downloaded).setVisible(false);
+    }
+
+    private void showRecyclerView() {
+        findViewById(R.id.main_error_text).setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+
+        Menu nav_menu = navigationView.getMenu();
+        nav_menu.findItem(R.id.nav_books_all).setVisible(true);
+        nav_menu.findItem(R.id.nav_books_downloaded).setVisible(true);
     }
 
     @Override
@@ -202,7 +253,6 @@ public class MainActivity extends AppCompatActivity
             editor.remove(Values.Preferences.USER_EMAIL_VALUE_NAME);
 
             editor.apply();
-
         }
 
         startActivity(new Intent(this, LoginActivity.class));
@@ -215,12 +265,16 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
             case R.id.nav_books_all:
+                mSwipeRefreshLayout.setRefreshing(true);
+                listCall.clone().enqueue(buildBooksCallback());
                 break;
 
             case R.id.nav_books_downloaded:
+                getSupportActionBar().setTitle("Livros Baixados");
                 BookAdapter adapter = (BookAdapter) recyclerView.getAdapter();
-                adapter.removeNotDownloadedBooks();
+                adapter.showDownloaded();
                 recyclerView.setAdapter(adapter);
+                recyclerView.scheduleLayoutAnimation();
                 break;
 
             case R.id.nav_exit:

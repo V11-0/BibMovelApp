@@ -29,8 +29,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             Intent download = new Intent(getActivity(), DownloadService.class);
             download.putExtra("isBook", false);
 
-            // TODO: 09/11/18 Verificar versão antes
-
             getContext().startService(download);
 
             return true;

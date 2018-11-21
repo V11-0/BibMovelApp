@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="10dp"
     tools:context=".BookDetailsActivity">
 
     <LinearLayout
@@ -107,6 +108,24 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:textColor="@color/colorAccent"
+        android:onClick="showCommentDialog"
         android:text="Escrever um comentário"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_comment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/comment_no_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        style="@android:style/TextAppearance.DeviceDefault.Widget.ActionMode.Subtitle"
+        android:lines="2"
+        android:textSize="23sp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:text="Não há comentários para esse livro"/>
 
 </LinearLayout>
