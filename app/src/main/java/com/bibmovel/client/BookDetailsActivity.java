@@ -4,12 +4,12 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -26,17 +26,20 @@ import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.retrofit.ClassificacaoService;
 import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
-
 import com.bibmovel.client.utils.DownloadImage;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +58,8 @@ public class BookDetailsActivity extends AppCompatActivity implements Observer {
     private Usuario mUser;
     private GoogleSignInAccount mAccount;
 
+    private RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +68,18 @@ public class BookDetailsActivity extends AppCompatActivity implements Observer {
 
         mToolbar = findViewById(R.id.collapsing_toolbar);
         mToolbar.setTitle("Titúlo");
+
+        Toolbar toolbar = findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Deixa os ícones da barra de navegação escuros para Android Oreo ou superior
+        if (Build.VERSION.SDK_INT >= 26) {
+            int flags = getWindow().getDecorView().getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            getWindow().getDecorView().setSystemUiVisibility(flags);
+        }
 
         String bookPath = getIntent().getStringExtra("bookPath");
         mUser = getIntent().getParcelableExtra("user");
@@ -103,22 +120,31 @@ public class BookDetailsActivity extends AppCompatActivity implements Observer {
         edt_editor.setText(livro.getEditora());
         edt_author.setText(livro.getAutor());
 
-        RecyclerView recyclerView = findViewById(R.id.rv_comment);
+        recyclerView = findViewById(R.id.rv_comment);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL
                 , false));
+
+        getComments();
+
+        new DownloadImage(livro.getNomeArquivo(), this);
+    }
+
+    private void getComments() {
 
         ClassificacaoService classificacaoService = instance.create(ClassificacaoService.class);
         classificacaoService.getClassificacoes(livro.getIsbn()).enqueue(new Callback<List<Classificacao>>() {
             @Override
             public void onResponse(Call<List<Classificacao>> call, Response<List<Classificacao>> response) {
 
+                TextView no_comments = findViewById(R.id.comment_no_comments);
                 List<Classificacao> body = response.body();
 
                 if ( (body != null) && (body.size() > 0) ) {
+                    no_comments.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     recyclerView.setAdapter(new ClassificationAdapter(body));
                 } else {
                     recyclerView.setVisibility(View.GONE);
-                    TextView no_comments = findViewById(R.id.comment_no_comments);
                     no_comments.setVisibility(View.VISIBLE);
                 }
             }
@@ -128,8 +154,6 @@ public class BookDetailsActivity extends AppCompatActivity implements Observer {
                 t.printStackTrace();
             }
         });
-
-        new DownloadImage(livro.getNomeArquivo(), this);
     }
 
     @Override
@@ -144,10 +168,12 @@ public class BookDetailsActivity extends AppCompatActivity implements Observer {
         switch (item.getItemId()) {
 
             case R.id.detail_search_author:
-                Intent intent = new Intent(Intent.ACTION_SEARCH);
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
                 intent.putExtra(SearchManager.QUERY, livro.getAutor());
+
                 if (intent.resolveActivity(getPackageManager()) != null)
                     startActivity(intent);
+
                 break;
         }
 
@@ -159,7 +185,7 @@ public class BookDetailsActivity extends AppCompatActivity implements Observer {
         View dialog_view = getLayoutInflater().inflate(R.layout.dialog_comment, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false).setView(dialog_view);
+        builder.setView(dialog_view);
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -194,8 +220,10 @@ public class BookDetailsActivity extends AppCompatActivity implements Observer {
                 @Override
                 public void onResponse(Call<Classificacao> call, Response<Classificacao> response) {
 
-                    if (response.isSuccessful())
+                    if (response.isSuccessful()) {
                         Toast.makeText(v.getContext(), "Classificação Inserida", Toast.LENGTH_LONG).show();
+                        getComments();
+                    }
                     else
                         Toast.makeText(v.getContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
 

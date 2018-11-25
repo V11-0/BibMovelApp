@@ -22,7 +22,7 @@ public class WelcomeScreen extends WelcomeActivity {
 
                 .page(new TitlePage(0, "O que é o aplicativo?"))
                 .page(new BasicPage(0, "BibMóvel", "Este é um aplicativo de gerenciamento de livros" +
-                        " que te possibilita compartilhar e baixar sem poblemas.")
+                        " que te possibilita compartilhar e baixar livros sem problemas.")
                         .background(R.color.welcome_background2))
                 .page(new BasicPage(0, "Esperamos que goste", "Utilize-o com responsabilidades.")
                         .background(R.color.welcome_background3));

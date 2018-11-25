@@ -1,12 +1,18 @@
 package com.bibmovel.client;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,22 +21,27 @@ import com.bibmovel.client.model.vo.Livro;
 import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.retrofit.LivroService;
 import com.bibmovel.client.retrofit.RetroFitInstance;
+import com.bibmovel.client.services.UploadService;
 import com.bibmovel.client.settings.SettingsActivity;
 import com.bibmovel.client.utils.Values;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -38,10 +49,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -63,13 +74,21 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Deixa os ícones da barra de navegação escuros para Android Oreo ou superior
+        if (Build.VERSION.SDK_INT >= 26) {
+            int flags = getWindow().getDecorView().getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            getWindow().getDecorView().setSystemUiVisibility(flags);
+        }
+
         FloatingActionButton fab = findViewById(R.id.fab);
 
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("application/pdf");
-            startActivityForResult(intent, Values.Codes.PICKFILE_REQUEST_CODE);
-        });
+        fab.setOnClickListener(v -> new MaterialFilePicker()
+                .withActivity(this)
+                .withRequestCode(Values.Codes.PICKFILE_REQUEST_CODE)
+                .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by file name using regexp
+                .withHiddenFiles(false) // Show hidden files and folders
+                .start());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -197,7 +216,46 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         getMenuInflater().inflate(R.menu.menu_common, menu);
+
+        // Associate searchable configuration with the SearchView
+        /*SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.main_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                BookAdapter adapter = (BookAdapter) recyclerView.getAdapter();
+                recyclerView.setAdapter(adapter);
+
+                List<Livro> books = adapter.getBooks();
+
+                for (int i = 0; i < books.size(); i++) {
+
+                    if (!books.get(i).getTitulo().contains(query))
+                        recyclerView.removeViewAt(i);
+                }
+
+                if (recyclerView.getChildAt(0) == null)
+                    Snackbar.make(searchView, "Não há livros com esse titulo", Snackbar.LENGTH_LONG)
+                            .show();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });*/
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -222,10 +280,63 @@ public class MainActivity extends AppCompatActivity
 
             if (data != null) {
 
-                File file = new File(data.getData().getPath());
+                String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                File file = new File(path);
 
-                // TODO: 06/11/2018 Realizar Upload
-                Toast.makeText(this, file.getName(), Toast.LENGTH_LONG).show();
+                Intent upload = new Intent(this, UploadService.class);
+                upload.putExtra("file", file);
+
+                startService(upload);
+
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                dlg.setTitle("Seu arquivo está sendo enviado" +
+                        "\nMas precisamos de algumas informações");
+
+                View view = LayoutInflater.from(this).inflate(R.layout.dialog_send_book, null);
+
+                dlg.setView(view);
+                dlg.setNegativeButton("Cancelar", null);
+                dlg.setPositiveButton("Ok", (dialog, which) -> {
+
+                    EditText edt_titulo = view.findViewById(R.id.send_titulo);
+                    EditText edt_isbn = view.findViewById(R.id.send_isbn);
+                    EditText edt_genero = view.findViewById(R.id.send_genero);
+                    EditText edt_ano = view.findViewById(R.id.send_ano);
+                    EditText edt_autor = view.findViewById(R.id.send_autor);
+                    EditText edt_editora = view.findViewById(R.id.send_editora);
+
+                    Livro livro = new Livro();
+                    livro.setTitulo(edt_titulo.getText().toString());
+                    livro.setIsbn(edt_isbn.getText().toString());
+                    livro.setGenero(edt_genero.getText().toString());
+                    livro.setAnoPublicacao(Short.valueOf(edt_ano.getText().toString()));
+                    livro.setAutor(edt_autor.getText().toString());
+                    livro.setEditora(edt_editora.getText().toString());
+
+                    livro.setNomeArquivo(file.getName());
+
+                    Retrofit retrofit = RetroFitInstance.getRetrofitInstance();
+                    Call<Livro> livroCall = retrofit.create(LivroService.class).criarLivro(livro);
+
+                    livroCall.enqueue(new Callback<Livro>() {
+                        @Override
+                        public void onResponse(Call<Livro> call, Response<Livro> response) {
+
+                            if (response.isSuccessful() && response.body() != null)
+                                Toast.makeText(dlg.getContext(), "Sucesso", Toast.LENGTH_LONG).show();
+                            else
+                                Log.wtf("Response", "With no response");
+                        }
+
+                        @Override
+                        public void onFailure(Call<Livro> call, Throwable t) {
+                            t.printStackTrace();
+                            Toast.makeText(dlg.getContext(), "Falhou", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                });
+
+                dlg.create().show();
             }
         }
     }
@@ -265,6 +376,7 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
             case R.id.nav_books_all:
+                mSwipeRefreshLayout.setEnabled(true);
                 mSwipeRefreshLayout.setRefreshing(true);
                 listCall.clone().enqueue(buildBooksCallback());
                 break;
@@ -275,6 +387,7 @@ public class MainActivity extends AppCompatActivity
                 adapter.showDownloaded();
                 recyclerView.setAdapter(adapter);
                 recyclerView.scheduleLayoutAnimation();
+                mSwipeRefreshLayout.setEnabled(false);
                 break;
 
             case R.id.nav_exit:

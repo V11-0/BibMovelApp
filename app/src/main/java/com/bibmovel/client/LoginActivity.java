@@ -197,12 +197,21 @@ public class LoginActivity extends AppCompatActivity {
         it.putExtra("google_account", account);
 
         UsuarioService service = RetroFitInstance.getRetrofitInstance().create(UsuarioService.class);
-        service.verifyGoogleAccount(new Usuario(account.getGivenName())).enqueue(new Callback<Usuario>() {
+
+        Usuario google = new Usuario(account.getGivenName());
+        service.verifyGoogleAccount(google).enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+
                 Log.d("Entrou", "VerifyGoogleAccount onResponse");
-                startActivity(it);
-                finish();
+
+                if (response.isSuccessful()) {
+                    startActivity(it);
+                    finish();
+                } else {
+                    Snackbar.make(LoginActivity.this.getCurrentFocus(), "Não é possível entrar, tente novamente mais tarde"
+                            , Snackbar.LENGTH_LONG).show();
+                }
             }
 
             @Override

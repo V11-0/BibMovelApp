@@ -2,6 +2,7 @@ package com.bibmovel.client.utils;
 
 import java.net.MalformedURLException;
 
+import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
 
 /**
@@ -10,6 +11,7 @@ import jcifs.smb.SmbFile;
 public abstract class ConnectionFactory {
 
     public static SmbFile getSmbConnection(String path) throws MalformedURLException {
-        return new SmbFile("smb://192.168.0.100/BibMovel/" + path);
+        return new SmbFile("smb://192.168.0.100/BibMovel/" + path
+                , new NtlmPasswordAuthentication("Root", "bibmovel", null));
     }
 }

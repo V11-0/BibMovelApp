@@ -157,6 +157,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         }
     }
 
+    public List<Livro> getBooks() {
+        return mBooks;
+    }
+
     class BookViewHolder extends RecyclerView.ViewHolder {
 
         private TextView bookName;
