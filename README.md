@@ -1,6 +1,8 @@
 # BibMovelApp
 
-[![AUR](https://img.shields.io/aur/license/yaourt.svg)](https://github.com/vinibrenobr11/BibMovelApp/LICENSE)
+[![AUR](https://img.shields.io/aur/license/yaourt.svg)](https://www.gnu.org/licenses/gpl.txt)
 
-<p>This is the Client-Side of BibMovel project</p>
-<p>Server-Side can be found at https://github.com/atTh3SK/rpi-mobile-server
+<p>BibMóvel is a project designed to access PDFs
+files located in a remote Samba and MySQL server.</p>
+
+<p>BibMovelApp is the Android App client of this project.</p>
