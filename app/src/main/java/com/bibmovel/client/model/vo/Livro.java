@@ -2,8 +2,6 @@ package com.bibmovel.client.model.vo;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class Livro {
 
     @SerializedName("titulo") private String titulo;

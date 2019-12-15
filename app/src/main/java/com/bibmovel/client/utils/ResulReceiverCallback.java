@@ -5,5 +5,5 @@ package com.bibmovel.client.utils;
  */
 public interface ResulReceiverCallback {
 
-    public void onDownloaded(String file_name);
+    void onDownloaded(String file_name);
 }

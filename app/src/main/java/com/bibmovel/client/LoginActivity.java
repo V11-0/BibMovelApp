@@ -15,27 +15,25 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bibmovel.client.model.vo.Usuario;
 import com.bibmovel.client.retrofit.RetroFitInstance;
 import com.bibmovel.client.retrofit.UsuarioService;
 import com.bibmovel.client.settings.SettingsActivity;
 import com.bibmovel.client.splash.WelcomeScreen;
 import com.bibmovel.client.utils.Values;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-
 import com.stephentuso.welcome.WelcomeHelper;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bibmovel.client.BookDetailsActivity;
 import com.bibmovel.client.BuildConfig;
@@ -22,15 +25,10 @@ import com.bibmovel.client.services.DownloadService;
 import com.bibmovel.client.utils.DownloadResultReceiver;
 import com.bibmovel.client.utils.ResulReceiverCallback;
 import com.bibmovel.client.utils.Values;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.io.File;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by vinibrenobr11 on 08/09/18 at 13:19

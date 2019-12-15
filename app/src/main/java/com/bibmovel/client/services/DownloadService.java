@@ -11,6 +11,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.ResultReceiver;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.FileProvider;
+
 import com.bibmovel.client.BuildConfig;
 import com.bibmovel.client.utils.Channels;
 import com.bibmovel.client.utils.ConnectionFactory;
@@ -22,11 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
-
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
-import androidx.core.content.FileProvider;
 
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
@@ -100,7 +100,13 @@ public class DownloadService extends IntentService {
                 dir = ConnectionFactory.getSmbConnection(Values.Path.UPDATES_PATH);
                 files = dir.listFiles();
 
-                SmbFile update = files[1];
+                // Verifica qual é o arquivo de atualização correto
+                SmbFile update;
+
+                if (files[0].getName().equals("app-release.apk"))
+                    update = files[0];
+                else
+                    update = files[1];
 
                 if (update.getName().equals("app-release.apk")) {
                     try {
@@ -110,8 +116,7 @@ public class DownloadService extends IntentService {
                         e.printStackTrace();
                     }
 
-                } else
-                    throw new UnsupportedOperationException("Update file do not match");
+                }
             }
 
         } catch (IOException e) {

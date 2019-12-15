@@ -3,7 +3,8 @@ package com.bibmovel.client.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.bibmovel.client.utils.ConnectionFactory;
 import com.bibmovel.client.utils.Values;
@@ -13,7 +14,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import androidx.annotation.Nullable;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileOutputStream;
 

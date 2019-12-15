@@ -3,14 +3,14 @@ package com.bibmovel.client.settings;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+
 import com.bibmovel.client.BuildConfig;
 import com.bibmovel.client.R;
 import com.bibmovel.client.services.DownloadService;
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.snackbar.Snackbar;
-
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

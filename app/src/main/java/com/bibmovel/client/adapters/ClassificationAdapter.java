@@ -6,13 +6,13 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bibmovel.client.R;
 import com.bibmovel.client.model.vo.Classificacao;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by vinibrenobr11 on 14/11/2018 at 13:47
